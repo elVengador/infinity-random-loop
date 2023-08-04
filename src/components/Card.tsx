@@ -1,13 +1,13 @@
 import { CSSProperties } from "react"
 
 type CardProps ={
-  title: string,
-  children: string,
+  listTitle: string,
+  value: string,
   color?: string,
   style?: CSSProperties
 }
 
-export const Card = ({title, children, color, style}:CardProps)=>{
+export const Card = ({listTitle, value, color, style}:CardProps)=>{
   return(
     <section
       style={{
@@ -17,8 +17,8 @@ export const Card = ({title, children, color, style}:CardProps)=>{
         ...style
       }}
     >
-      <h1 style={{textAlign:'center', backgroundColor: `${color}`, color:'white', textShadow:'0 0 3px #000', fontSize:'20px', padding:'5px'}}>{title}</h1>
-      <p style={{fontSize: '180px',textAlign: 'center',color: 'rgb(206,206,206', }}>{children}</p>
+      <h1 style={{textAlign:'center', backgroundColor: `${color}`, color:'white', textShadow:'0 0 3px #000', fontSize:'20px', padding:'5px'}}>{listTitle}</h1>
+      <p style={{fontSize: '180px',textAlign: 'center',color: 'rgb(206,206,206', }}>{value}</p>
     </section>
   )
 }
