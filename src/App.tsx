@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { Card } from "./components/Card";
 import { AllLists } from "./components/AllListsProps";
+import { Form } from "./components/Form";
 
 const randomValue = (values: string[]): string => {
   const randomIdx = Math.floor(Math.random() * (values.length - 1));
@@ -25,9 +26,9 @@ function App() {
    * - create a PR
    * 
    * TODO:
-   * - descoment the add and edit button from AllLists component
-   * - create a state displayListForm
-   * - create a Modal with position absolute and display if displayListForm is True
+   * X discommend the add and edit button from AllLists component
+   * X create a state displayListForm
+   * X create a Modal with position absolute and display if displayListForm is True
    * - send {data:{title:string,list:selectedList},isNew:boolean} to the Modal
    * - when create a new List isNew=false and data:{title:"",data:[]}
    * - when edit a list isNew=true and data: {title:"the title of the list",data:selectedList}
@@ -37,6 +38,7 @@ function App() {
    */
   const [randomCard, setRandomCard] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [displayListForm, setDisplayListForm] =useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -54,6 +56,24 @@ function App() {
         value={randomCard}
         color={isPlaying ? randomColor() : "rgb(42, 42, 42)"}
       />
+
+      <dialog 
+        open={displayListForm}
+        style={{
+          width: '100%',
+          height:'100%',
+          position:'absolute',
+        }}
+        >
+      <Form color="#296abf" closeModal={()=>setDisplayListForm(prev=>!prev)}
+      style={{
+        position: 'absolute',
+        top: '30%',
+        left:'30%',
+      }}
+      />
+      </dialog>
+
       <button
         className={isPlaying ? "stop-button" : "play-button"}
         onClick={() => setIsPlaying(!isPlaying)}
@@ -61,7 +81,7 @@ function App() {
         {isPlaying ? "▣ Stop" : "▶ Play"}
       </button>
 
-      <AllLists options={[{label:"l1",value:"1"}]}/>
+      <AllLists options={[{label:"l1",value:"1"}]} onAdd={()=>setDisplayListForm(prev=>!prev)} onEdit={()=>console.log(displayListForm)}/>
     </>
   );
 }

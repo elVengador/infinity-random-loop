@@ -2,14 +2,15 @@ import { CSSProperties } from "react"
 
 type ButtonProps = {
   children:string, 
-  onclick?:()=>void,
+  onClick?:()=>void,
   style?: CSSProperties,
+  type?: string,
 }
 
-export const Button = ({children, onclick, style}:ButtonProps) => {
+export const Button = ({children, onClick, style}:ButtonProps) => {
   return(
     <button 
-      onClick={()=>onclick}
+      onClick={onClick}
       style={{
         borderRadius: '10px',
         padding: '10px',

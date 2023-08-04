@@ -1,8 +1,12 @@
 import { Button } from "./Button";
 
-type AllListsProps = { options:{value:string,label:string}[] };
+type AllListsProps = { 
+  options:{value:string,label:string}[], 
+  onAdd: ()=>void, 
+  onEdit: ()=> void,
+};
 
-export const AllLists = ({ options }: AllListsProps) => {
+export const AllLists = ({ options,onAdd, onEdit }: AllListsProps) => {
   return (
     <div style={{
       border: 'solid 2px pink',
@@ -14,8 +18,8 @@ export const AllLists = ({ options }: AllListsProps) => {
 
       <label htmlFor="allLists">All Lists</label>
       <div>
-      {/* <Button style={{padding:"4px"}}>+</Button>
-      <Button style={{padding:"4px"}}>/</Button> */}
+      <Button style={{padding:"4px"}} onClick={onAdd}>+</Button>
+      <Button style={{padding:"4px"}} onClick={onEdit}>/</Button>
       </div>
       </div>
       <select
