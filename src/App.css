@@ -18,7 +18,7 @@ html,body{
   box-sizing: border-box;
 }
 
-.random-note{
+.random-card{
   font-size: 180px;
   text-align: center;
   color: rgb(206, 206, 206);
@@ -49,5 +49,5 @@ html,body{
 
 .stop-button:hover{
   background-color: rgb(233, 79, 18);
-  
+  /* display: ; */
 }
