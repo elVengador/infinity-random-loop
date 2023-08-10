@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Card } from "./components/Card";
-import { AllLists } from "./components/AllListsProps";
+import { AllLists, Lists } from "./components/AllListsProps";
+import { ENGLISH_BASIC_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
+
+export type SelectedList = {
+  label: string,
+  value: string
+}
+
+const LISTS: Lists = { noteMusical: { value: NOTE_MUSICAL_LIST, label: 'Note Musical' }, englishBasicVocabulary: { value: ENGLISH_BASIC_VOCABULARY_LIST, label: 'English Basic Vocabulary' } }
+// console.log(lists)
 
 const randomValue = (values: string[]): string => {
   const randomIdx = Math.floor(Math.random() * (values.length - 1));
@@ -37,32 +46,47 @@ function App() {
    */
   const [randomCard, setRandomCard] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
+  const [lists, setLists] = useState(LISTS)
+  // console
 
   useEffect(() => {
     if (!isPlaying) return;
     const intervalId = setInterval(() => {
       // TODO: get new random value
-      // setRandomCard(randomValue(superList.words))
+      if(!selectedList) return console.log('not exist list')
+      // console.log(lists)
+      // console.log(selectedList)
+      // console.log(lists[selectedList.value].value)
+      setRandomCard(randomValue(lists[selectedList.value].value))
     }, 1000);
     return () => clearInterval(intervalId);
   }, [isPlaying]);
 
-  return (
-    <>
-      <Card
-        listTitle={"Title list"}
-        value={randomCard}
-        color={isPlaying ? randomColor() : "rgb(42, 42, 42)"}
-      />
-      <button
-        className={isPlaying ? "stop-button" : "play-button"}
-        onClick={() => setIsPlaying(!isPlaying)}
-      >
-        {isPlaying ? "▣ Stop" : "▶ Play"}
-      </button>
 
-      <AllLists options={[{label:"l1",value:"1"}]}/>
-    </>
+  return (
+    <div>
+      {
+        selectedList &&
+        <>
+          <Card
+            listTitle={selectedList.label}
+            value={randomCard}
+            color={isPlaying ? randomColor() : "rgb(42, 42, 42)"}
+          />
+          <button
+            className={isPlaying ? "stop-button" : "play-button"}
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? "▣ Stop" : "▶ Play"}
+          </button>
+        </>
+      }
+
+      {!selectedList && <p>select a list please</p>}
+      <AllLists lists={lists} options={[{ label: "l1", value: "1" }]} value={selectedList} onChange={setSelectedList} />
+
+    </div>
   );
 }
 

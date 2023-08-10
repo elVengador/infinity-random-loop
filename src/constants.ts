@@ -1,5 +1,5 @@
-const NOTE_MUSICAL_LIST:string[] = ['DO', 'RE', 'MI', 'FA', 'SOL', 'LA', 'SI']
-const ENGLISH_BASIC_VOCABULARY_LIST = [
+export const NOTE_MUSICAL_LIST:string[] = ['DO', 'RE', 'MI', 'FA', 'SOL', 'LA', 'SI']
+export const ENGLISH_BASIC_VOCABULARY_LIST: string[] = [
   "apple",
   "banana",
   "car",
