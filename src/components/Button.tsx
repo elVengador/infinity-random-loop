@@ -9,12 +9,14 @@ type ButtonProps = {
 export const Button = ({children, onclick, style}:ButtonProps) => {
   return(
     <button 
-      onClick={()=>onclick}
+      onClick={onclick}
       style={{
-        borderRadius: '10px',
+        border: 'none',
         padding: '10px',
         fontSize: '120%',
-        background: '#00a0e1',
+        cursor: 'pointer',
+        background: 'transparent',
+        color: 'white',
         ...style
       }}
     >

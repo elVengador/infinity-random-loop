@@ -1,24 +1,27 @@
 import { CSSProperties } from "react"
 
-type CardProps ={
-  listTitle: string,
+type CardProps = {
   value: string,
-  color?: string,
+  backgroundColor?: string,
   style?: CSSProperties
 }
 
-export const Card = ({listTitle, value, color, style}:CardProps)=>{
-  return(
+export const Card = ({ value, backgroundColor, style }: CardProps) => {
+  return (
     <section
       style={{
-        boxShadow:`0 0 10px ${color}`,
-        borderRadius: '15px',
-        width: '50%',
+        backgroundColor: `#${backgroundColor}`,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '3px 3px 5px #0000004a',
+        width: '700px',
+        height: '500px',
         ...style
       }}
     >
-      <h1 style={{textAlign:'center', backgroundColor: `${color}`, color:'white', textShadow:'0 0 3px #000', fontSize:'20px', padding:'5px'}}>{listTitle}</h1>
-      <p style={{fontSize: '180px',textAlign: 'center',color: 'rgb(206,206,206', }}>{value}</p>
+      <p style={{ fontSize: '100px', textAlign: 'center', color: 'rgb(206,206,206', }}>{value}</p>
     </section>
   )
 }

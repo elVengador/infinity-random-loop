@@ -5,7 +5,7 @@ export type Lists= {[key:string]:{value:string[], label:string}}
 
 type AllListsProps = { 
   lists:Lists
-  options:{value:string,label:string}[],
+  options:{valueOptList:string,labelOptList:string}[],
   value: SelectedList | null, 
   defaultValue?: string,
   onChange: (value:SelectedList | null)=> void
@@ -25,31 +25,27 @@ type AllListsProps = {
 
   return (
     <div style={{
-      border: 'solid 2px pink',
+      border: 'solid 1px white',
       width: '280px',
       display: 'flex',
       flexDirection:"column",
-    }}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      cursor:'pointer',
 
-      <label htmlFor="allLists">All Lists</label>
-      <div>
-      {/* <Button style={{padding:"4px"}}>+</Button>
-      <Button style={{padding:"4px"}}>/</Button> */}
-      </div>
-      </div>
+    }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}></div>
       <select
-        name="allLists"
         id=""
         value={value ? value.value : undefined}
         defaultValue={defaultValue}
         onChange={(e)=> onChangeLists(e.target.value)}
         style={{
           width: "100%",
-          padding:"4px 8px"
+          padding:"8px",
+          background: '#1E1E1E',
+          fontSize:'16px',
         }}
       >
-        {Object.keys(lists).map((key,idx)=><option key={idx} value={key} >{lists[key]['label']}</option>)}
+        {Object.keys(lists).map((key,idx)=><option style={{background: '#1E1E1E'}} key={idx} value={key} >{lists[key]['label']}</option>)}
       </select>
     </div>
   );
