@@ -2,11 +2,12 @@ import { CSSProperties } from "react"
 
 type CardProps = {
   value: string,
-  backgroundColor?: string,
+  backgroundColor: string,
+  color: string,
   style?: CSSProperties
 }
 
-export const Card = ({ value, backgroundColor, style }: CardProps) => {
+export const Card = ({ value, backgroundColor, color, style }: CardProps) => {
   return (
     <section
       style={{
@@ -21,7 +22,7 @@ export const Card = ({ value, backgroundColor, style }: CardProps) => {
         ...style
       }}
     >
-      <p style={{ fontSize: '100px', textAlign: 'center', color: 'rgb(206,206,206', }}>{value}</p>
+      <p style={{ fontSize: '100px', textAlign: 'center', color: color, }}>{value}</p>
     </section>
   )
 }

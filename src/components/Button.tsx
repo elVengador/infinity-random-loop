@@ -15,8 +15,7 @@ export const Button = ({children, onclick, style}:ButtonProps) => {
         padding: '10px',
         fontSize: '120%',
         cursor: 'pointer',
-        background: 'transparent',
-        color: 'white',
+        background: 'none',
         ...style
       }}
     >

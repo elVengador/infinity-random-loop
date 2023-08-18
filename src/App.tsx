@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import "./App.css";
+import { useEffect, useState } from "react";
+import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
 import { Card } from "./components/Card";
 import { AllLists, Lists } from "./components/AllListsProps";
-import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
 import { Button } from "./components/Button";
 
 export type SelectedList = {
@@ -41,6 +41,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
   const [lists, setLists] = useState(LISTS)
+  const [visual, setVisual] = useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -53,16 +54,22 @@ function App() {
     return () => clearInterval(intervalId);
   }, [isPlaying]);
 
+  const backgroundColor =  visual=== true ? 'rgb(206,206,206)' : "#1E1E1E"
+  const color = visual=== true ? "#1E1E1E" : 'rgb(206,206,206)' 
+
 
   return (
     <div
       style={{
         height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '30px'
+        gap: '30px',
+        background: backgroundColor,
+        color: color,
       }}
     >
       {
@@ -71,10 +78,14 @@ function App() {
           <Card
             value={randomCard}
             backgroundColor={isPlaying ? '3D5468' : "683D3D"}
+            color={color}
           />
           <Button 
             onclick={()=>setIsPlaying(!isPlaying)}
-
+            style={{
+              background: backgroundColor,
+              color: color,
+            }}
           >
             {isPlaying ? "▣ Stop" : "▶ Play"}
           </Button>
@@ -82,7 +93,21 @@ function App() {
       }
 
       {!selectedList && <p>Select a list please</p>}
-      <AllLists lists={lists} options={[{ labelOptList: "l1", valueOptList: "1" }]} value={selectedList} onChange={setSelectedList} />
+      <AllLists lists={lists} options={[{ labelOptList: "l1", valueOptList: "1" }]} value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
+
+      <Button 
+        onclick={()=>setVisual(visual=>!visual)}
+        style={{
+          fontSize: "50px",
+          background: backgroundColor,
+          color: color,
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px'
+        }}
+      >
+      {visual === true ?  "☀" : "☾"}
+      </Button>
 
       <p
         style={{

@@ -7,17 +7,19 @@ type AllListsProps = {
   lists:Lists
   options:{valueOptList:string,labelOptList:string}[],
   value: SelectedList | null, 
-  defaultValue?: string,
   onChange: (value:SelectedList | null)=> void
+  backgroundColor: string,
+  color: string,
+  defaultValue?: string,
  };
 
 
- export const AllLists = ({ lists, options, value, defaultValue, onChange }: AllListsProps) => {
+ export const AllLists = ({ lists, options, value, defaultValue, onChange, backgroundColor, color }: AllListsProps) => {
    const onChangeLists = (value:string)=> {
-    const tt = lists[value] 
-    if(!tt)return
+    const titleList = lists[value] 
+    if(!titleList)return
     
-    const selectedList:SelectedList = {value, label: tt.label}
+    const selectedList:SelectedList = {value, label: titleList.label}
     onChange(selectedList)
   }
 
@@ -25,7 +27,7 @@ type AllListsProps = {
 
   return (
     <div style={{
-      border: 'solid 1px white',
+      border: `solid 1px ${color}`,
       width: '280px',
       display: 'flex',
       flexDirection:"column",
@@ -41,11 +43,12 @@ type AllListsProps = {
         style={{
           width: "100%",
           padding:"8px",
-          background: '#1E1E1E',
+          background: backgroundColor ,
           fontSize:'16px',
+          color: color,
         }}
       >
-        {Object.keys(lists).map((key,idx)=><option style={{background: '#1E1E1E'}} key={idx} value={key} >{lists[key]['label']}</option>)}
+        {Object.keys(lists).map((key,idx)=><option style={{background: backgroundColor, color: color, }} key={idx} value={key} >{lists[key]['label']}</option>)}
       </select>
     </div>
   );
