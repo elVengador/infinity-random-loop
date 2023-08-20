@@ -27,7 +27,7 @@ function App() {
    * - create a PR
    * 
    * TODO:
-   * - descoment the add and edit button from AllLists component
+   * - discommend the add and edit button from AllLists component
    * - create a state displayListForm
    * - create a Modal with position absolute and display if displayListForm is True
    * - send {data:{title:string,list:selectedList},isNew:boolean} to the Modal
@@ -40,16 +40,14 @@ function App() {
   const [randomCard, setRandomCard] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
-  const [lists, setLists] = useState(LISTS)
   const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
     const intervalId = setInterval(() => {
-      // TODO: get new random value
       if (!selectedList) return console.log('not exist list')
      
-      setRandomCard(randomValue(lists[selectedList.value].value))
+      setRandomCard(randomValue(LISTS[selectedList.value].value))
     }, 1000);
     return () => clearInterval(intervalId);
   }, [isPlaying]);
@@ -94,7 +92,7 @@ function App() {
       }
 
       {!selectedList && <p>Select a list please</p>}
-      <ListsSelector lists={lists}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
+      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
 
       <Button 
         onclick={()=>setIsDarkMode(visual=>!visual)}
