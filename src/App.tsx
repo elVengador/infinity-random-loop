@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
 import "./App.css";
+import { useEffect, useState } from "react";
+import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
 import { Card } from "./components/Card";
-import { AllLists } from "./components/AllListsProps";
+
+import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Form } from "./components/Form";
+import { Button } from "./components/Button";
+
+export type SelectedList = {
+  label: string,
+  value: string
+}
+
+const LISTS: Lists = { noteMusical: { value: NOTE_MUSICAL_LIST, label: 'Note Musical' }, englishBasicVocabulary: { value: ENGLISH_BASIC_VOCABULARY_LIST, label: 'English Basic Vocabulary' }, englishIntermediateVocabulary: { value: ENGLISH_INTERMEDIATE_VOCABULARY_LIST, label: 'English Intermediate Vocabulary' }, englishAdvancedVocabulary: { value: ENGLISH_ADVANCED_VOCABULARY_LIST, label: 'English Advanced Vocabulary' } }
 
 const randomValue = (values: string[]): string => {
   const randomIdx = Math.floor(Math.random() * (values.length - 1));
   return values[randomIdx];
-};
-
-const randomColor = () => {
-  const rColor = Math.floor(Math.random() * 255);
-  const gColor = Math.floor(Math.random() * 255);
-  const bColor = Math.floor(Math.random() * 255);
-  return `rgb(${rColor}, ${gColor}, ${bColor})`;
 };
 
 function App() {
@@ -38,24 +41,75 @@ function App() {
    */
   const [randomCard, setRandomCard] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  const [displayListForm, setDisplayListForm] =useState(false)
+  const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [displayListForm, setDisplayListForm] = useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
     const intervalId = setInterval(() => {
-      // TODO: get new random value
-      // setRandomCard(randomValue(superList.words))
+      if (!selectedList) return console.log('not exist list')
+     
+      setRandomCard(randomValue(LISTS[selectedList.value].value))
     }, 1000);
     return () => clearInterval(intervalId);
   }, [isPlaying]);
 
+  const backgroundColor =  isDarkMode ? 'rgb(206,206,206)' : "#1E1E1E"
+  const color = isDarkMode  ? "#1E1E1E" : 'rgb(206,206,206)' 
+  const backgroundCard = isDarkMode ? '#FBFBFB' : '#6C6C6C'
+
+
   return (
-    <>
-      <Card
-        listTitle={"Title list"}
-        value={randomCard}
-        color={isPlaying ? randomColor() : "rgb(42, 42, 42)"}
-      />
+    <div
+      style={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '30px',
+        background: backgroundColor,
+        color: color,
+      }}
+    >
+      {
+        selectedList &&
+        <>
+          <Card
+            value={randomCard}
+            backgroundColor={backgroundCard}
+            color={color}
+          />
+          <Button 
+            onClick={()=>setIsPlaying(!isPlaying)}
+            style={{
+              background: backgroundColor,
+              color: color,
+            }}
+          >
+            {isPlaying ? "▣ Stop" : "▶ Play"}
+          </Button>
+        </>
+      }
+
+      {!selectedList && <p>Select a list please</p>}
+      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
+
+      <Button 
+        onClick={()=>setIsDarkMode(visual=>!visual)}
+        style={{
+          fontSize: "50px",
+          background: backgroundColor,
+          color: color,
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px'
+        }}
+      >
+      {isDarkMode === true ? "☾" : "☀"}
+      </Button>
 
       <dialog 
         open={displayListForm}
@@ -74,15 +128,15 @@ function App() {
       />
       </dialog>
 
-      <button
-        className={isPlaying ? "stop-button" : "play-button"}
-        onClick={() => setIsPlaying(!isPlaying)}
-      >
-        {isPlaying ? "▣ Stop" : "▶ Play"}
-      </button>
+      <p
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          fontSize: '14px'
+        }}
+      >By elVengador & Lachicagladiadora - 2023</p>
+    </div>
 
-      <AllLists options={[{label:"l1",value:"1"}]} onAdd={()=>setDisplayListForm(prev=>!prev)} onEdit={()=>console.log(displayListForm)}/>
-    </>
   );
 }
 

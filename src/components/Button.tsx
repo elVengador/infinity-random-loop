@@ -12,10 +12,11 @@ export const Button = ({children, onClick, style}:ButtonProps) => {
     <button 
       onClick={onClick}
       style={{
-        borderRadius: '10px',
+        border: 'none',
         padding: '10px',
         fontSize: '120%',
-        background: '#00a0e1',
+        cursor: 'pointer',
+        background: 'none',
         ...style
       }}
     >
