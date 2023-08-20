@@ -2,7 +2,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
 import { Card } from "./components/Card";
-import { AllLists, Lists } from "./components/AllListsProps";
+import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Button } from "./components/Button";
 
 export type SelectedList = {
@@ -94,7 +94,7 @@ function App() {
       }
 
       {!selectedList && <p>Select a list please</p>}
-      <AllLists lists={lists} options={[{ labelOptList: "l1", valueOptList: "1" }]} value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
+      <ListsSelector lists={lists}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
 
       <Button 
         onclick={()=>setIsDarkMode(visual=>!visual)}

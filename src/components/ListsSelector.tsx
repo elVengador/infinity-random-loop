@@ -1,11 +1,9 @@
 import { SelectedList } from "../App";
-import { Button } from "./Button";
 
 export type Lists= {[key:string]:{value:string[], label:string}}
 
-type AllListsProps = { 
+type ListsSelectorProps = { 
   lists:Lists
-  options:{valueOptList:string,labelOptList:string}[],
   value: SelectedList | null, 
   onChange: (value:SelectedList | null)=> void
   backgroundColor: string,
@@ -14,7 +12,7 @@ type AllListsProps = {
  };
 
 
- export const AllLists = ({ lists, options, value, defaultValue, onChange, backgroundColor, color }: AllListsProps) => {
+ export const ListsSelector = ({ lists, value, defaultValue, onChange, backgroundColor, color }: ListsSelectorProps) => {
    const onChangeLists = (value:string)=> {
     const titleList = lists[value] 
     if(!titleList)return
