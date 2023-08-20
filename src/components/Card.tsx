@@ -11,7 +11,7 @@ export const Card = ({ value, backgroundColor, color, style }: CardProps) => {
   return (
     <section
       style={{
-        backgroundColor: `#${backgroundColor}`,
+        backgroundColor: `${backgroundColor}`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

@@ -41,7 +41,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
   const [lists, setLists] = useState(LISTS)
-  const [visual, setVisual] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -54,8 +54,9 @@ function App() {
     return () => clearInterval(intervalId);
   }, [isPlaying]);
 
-  const backgroundColor =  visual=== true ? 'rgb(206,206,206)' : "#1E1E1E"
-  const color = visual=== true ? "#1E1E1E" : 'rgb(206,206,206)' 
+  const backgroundColor =  isDarkMode ? 'rgb(206,206,206)' : "#1E1E1E"
+  const color = isDarkMode  ? "#1E1E1E" : 'rgb(206,206,206)' 
+  const backgroundCard = isDarkMode ? '#FBFBFB' : '#6C6C6C'
 
 
   return (
@@ -77,7 +78,7 @@ function App() {
         <>
           <Card
             value={randomCard}
-            backgroundColor={isPlaying ? '3D5468' : "683D3D"}
+            backgroundColor={backgroundCard}
             color={color}
           />
           <Button 
@@ -96,7 +97,7 @@ function App() {
       <AllLists lists={lists} options={[{ labelOptList: "l1", valueOptList: "1" }]} value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
 
       <Button 
-        onclick={()=>setVisual(visual=>!visual)}
+        onclick={()=>setIsDarkMode(visual=>!visual)}
         style={{
           fontSize: "50px",
           background: backgroundColor,
@@ -106,7 +107,7 @@ function App() {
           right: '40px'
         }}
       >
-      {visual === true ?  "☀" : "☾"}
+      {isDarkMode === true ? "☾" : "☀"}
       </Button>
 
       <p
