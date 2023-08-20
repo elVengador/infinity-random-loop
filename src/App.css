@@ -8,7 +8,6 @@ html,body{
 }
 
 .root{
-  background-color: rgb(49, 49, 49);
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -16,38 +15,4 @@ html,body{
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-}
-
-.random-note{
-  font-size: 180px;
-  text-align: center;
-  color: rgb(206, 206, 206);
-}
-
-.play-button{
-  font-size: 36px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  padding: 20px;
-  background-color: rgb(40, 154, 255);
-}
-
-.play-button:hover{
-  background-color: rgb(49, 115, 255);
-  
-}
-
-.stop-button{
-  font-size: 36px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  padding: 20px;
-  background-color: rgb(255, 101, 40);
-}
-
-.stop-button:hover{
-  background-color: rgb(233, 79, 18);
-  
 }
