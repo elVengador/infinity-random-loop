@@ -1,18 +1,21 @@
 import { SelectedList } from "../App";
+import { Button } from "./Button";
 
 export type Lists= {[key:string]:{value:string[], label:string}}
 
 type ListsSelectorProps = { 
-  lists:Lists
+  lists:Lists 
   value: SelectedList | null, 
   onChange: (value:SelectedList | null)=> void
   backgroundColor: string,
   color: string,
+  onAddList: ()=>void,
+  onDelete?: ()=>void,
   defaultValue?: string,
  };
 
 
- export const ListsSelector = ({ lists, value, defaultValue, onChange, backgroundColor, color }: ListsSelectorProps) => {
+ export const ListsSelector = ({ lists, value, defaultValue, onChange, backgroundColor, color, onAddList}: ListsSelectorProps) => {
    const onChangeLists = (value:string)=> {
     const titleList = lists[value] 
     if(!titleList)return
@@ -28,7 +31,7 @@ type ListsSelectorProps = {
       border: `solid 1px ${color}`,
       width: '280px',
       display: 'flex',
-      flexDirection:"column",
+      flexDirection:"row",
       cursor:'pointer',
 
     }}>
@@ -48,6 +51,10 @@ type ListsSelectorProps = {
       >
         {Object.keys(lists).map((key,idx)=><option style={{background: backgroundColor, color: color, }} key={idx} value={key} >{lists[key]['label']}</option>)}
       </select>
+      <Button children="✕" onClick={onAddList} style={{
+          transform: 'rotate(45deg)' ,
+        }}
+      />
     </div>
   );
 };

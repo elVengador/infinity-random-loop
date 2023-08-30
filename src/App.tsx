@@ -6,6 +6,7 @@ import { Card } from "./components/Card";
 import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Form } from "./components/Form";
 import { Button } from "./components/Button";
+import { Modal } from "./components/Modal";
 
 export type SelectedList = {
   label: string,
@@ -54,10 +55,21 @@ function App() {
     }, 1000);
     return () => clearInterval(intervalId);
   }, [isPlaying]);
+  
+  const addNewItem = () => {
+    console.log('add new item')
+    setDisplayListForm(prev => prev=true)
+  }
+  
+  const sendForm = () => {
+    console.log('send form')
+    setDisplayListForm(true)
+  }
 
   const backgroundColor =  isDarkMode ? 'rgb(206,206,206)' : "#1E1E1E"
   const color = isDarkMode  ? "#1E1E1E" : 'rgb(206,206,206)' 
   const backgroundCard = isDarkMode ? '#FBFBFB' : '#6C6C6C'
+
 
 
   return (
@@ -77,6 +89,7 @@ function App() {
       {
         selectedList &&
         <>
+          
           <Card
             value={randomCard}
             backgroundColor={backgroundCard}
@@ -95,7 +108,7 @@ function App() {
       }
 
       {!selectedList && <p>Select a list please</p>}
-      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color}/>
+      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color} onAddList={()=>setDisplayListForm(prev=>!prev)} onDelete={()=>onDelete}/>
 
       <Button 
         onClick={()=>setIsDarkMode(visual=>!visual)}
@@ -111,22 +124,18 @@ function App() {
       {isDarkMode === true ? "☾" : "☀"}
       </Button>
 
-      <dialog 
-        open={displayListForm}
-        style={{
-          width: '100%',
-          height:'100%',
-          position:'absolute',
-        }}
-        >
-      <Form color="#296abf" closeModal={()=>setDisplayListForm(prev=>!prev)}
-      style={{
-        position: 'absolute',
-        top: '30%',
-        left:'30%',
-      }}
-      />
-      </dialog>
+      <Modal onOpen={displayListForm}>
+        {<Form color="#296abf" 
+          closeForm={()=>setDisplayListForm(prev=>!prev)}
+          addNewItem={addNewItem}
+          sendForm={sendForm}
+          style={{
+            position: 'absolute',
+            top: '30%',
+            left:'30%',
+          }}
+        />}
+      </Modal>
 
       <p
         style={{

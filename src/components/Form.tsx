@@ -3,11 +3,13 @@ import { Button } from "./Button"
 
 type FormProps = {
   color: string,
-  closeModal: ()=>void,
+  closeForm: ()=>void,
+  addNewItem: ()=>void,
+  sendForm: ()=>void,
   style?: CSSProperties
 }
 
-export const Form = ({ color, style, closeModal }: FormProps) => {
+export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps) => {
 
   return (
     <form action=""
@@ -47,15 +49,25 @@ export const Form = ({ color, style, closeModal }: FormProps) => {
           fontSize:'10px'
         }}
         >
-        <Button children="delete" />
-        <Button children="+" />
+        <Button children="✕" onClick={closeForm}
+          style={{
+            fontSize: '20px',
+            position: 'absolute',
+            top: '0px',
+            right: '0px'
+          }}
+          />
+        <Button children="✕" onClick={addNewItem}
+          style={{
+            fontSize: '20px',
+            transform: 'rotate(45deg)' ,
+          }}
+          />
         </div>
 
-        <Button type="submit" children="save" onClick={closeModal}
+        <Button type="submit" children="✓" onClick={sendForm}
           style={{
-            border: `solid 1px ${color}`,
-            borderRadius: '10px',
-            padding: '5px 10px',
+            fontSize: '20px',
           }}
         />
       </fieldset>

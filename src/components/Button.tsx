@@ -10,6 +10,7 @@ type ButtonProps = {
 export const Button = ({children, onClick, style}:ButtonProps) => {
   return(
     <button 
+      type="button"
       onClick={onClick}
       style={{
         border: 'none',
