@@ -28,7 +28,6 @@ type ListsSelectorProps = {
 
   return (
     <div style={{
-      border: `solid 1px ${color}`,
       width: '280px',
       display: 'flex',
       flexDirection:"row",
@@ -51,7 +50,7 @@ type ListsSelectorProps = {
       >
         {Object.keys(lists).map((key,idx)=><option style={{background: backgroundColor, color: color, }} key={idx} value={key} >{lists[key]['label']}</option>)}
       </select>
-      <Button children="✕" onClick={onAddList} style={{
+      <Button children="✕" onClick={onAddList} color={color} style={{
           transform: 'rotate(45deg)' ,
         }}
       />

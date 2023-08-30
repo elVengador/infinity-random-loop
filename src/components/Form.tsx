@@ -3,13 +3,15 @@ import { Button } from "./Button"
 
 type FormProps = {
   color: string,
+  background: string,
+  backgroundInput: string,
   closeForm: ()=>void,
   addNewItem: ()=>void,
   sendForm: ()=>void,
   style?: CSSProperties
 }
 
-export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps) => {
+export const Form = ({ color, background, backgroundInput, style, closeForm, addNewItem, sendForm}: FormProps) => {
 
   return (
     <form action=""
@@ -20,6 +22,8 @@ export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps
       <fieldset
         style={{
           border: `solid 1px ${color}`,
+          color:color,
+          background: background,
           borderRadius: '10px',
           display: "flex",
           flexDirection: "column",
@@ -28,16 +32,20 @@ export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps
           fontSize: '20px',
         }}>
         Create a New List
-        <input type="text" name="titleList" id="titleListForm" placeholder="write name list"
+        <input type="text" name="titleList"  placeholder="write name list"
           style={{
+            color:color,
+            background: backgroundInput,
             padding: '15px',
             fontSize: '15px',
             border: 'none',
             borderRadius: '10px',
           }}
-        />
-        <input type="text" name="item" id="item" placeholder="write new item"
+          />
+        <input type="text" name="item"  placeholder="write new item"
           style={{
+            color:color,
+            background: backgroundInput,
             padding: '15px',
             fontSize: '15px',
             border: 'none',
@@ -46,10 +54,11 @@ export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps
         />
         <div 
         style={{
-          fontSize:'10px'
+          fontSize:'10px',
+          background: background,
         }}
         >
-        <Button children="✕" onClick={closeForm}
+        <Button children="✕" onClick={closeForm} color={color}
           style={{
             fontSize: '20px',
             position: 'absolute',
@@ -57,7 +66,7 @@ export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps
             right: '0px'
           }}
           />
-        <Button children="✕" onClick={addNewItem}
+        <Button children="✕" onClick={addNewItem} color={color}
           style={{
             fontSize: '20px',
             transform: 'rotate(45deg)' ,
@@ -65,7 +74,7 @@ export const Form = ({ color, style, closeForm, addNewItem, sendForm}: FormProps
           />
         </div>
 
-        <Button type="submit" children="✓" onClick={sendForm}
+        <Button type="submit" children="✓" onClick={sendForm} color={color}
           style={{
             fontSize: '20px',
           }}

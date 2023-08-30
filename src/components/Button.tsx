@@ -3,11 +3,12 @@ import { CSSProperties } from "react"
 type ButtonProps = {
   children:string, 
   onClick?:()=>void,
+  color:string,
   style?: CSSProperties,
   type?: string,
 }
 
-export const Button = ({children, onClick, style}:ButtonProps) => {
+export const Button = ({children, onClick, color,style}:ButtonProps) => {
   return(
     <button 
       type="button"
@@ -18,6 +19,7 @@ export const Button = ({children, onClick, style}:ButtonProps) => {
         fontSize: '120%',
         cursor: 'pointer',
         background: 'none',
+        color: color,
         ...style
       }}
     >

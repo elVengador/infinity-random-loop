@@ -55,7 +55,7 @@ function App() {
     }, 1000);
     return () => clearInterval(intervalId);
   }, [isPlaying]);
-  
+
   const addNewItem = () => {
     console.log('add new item')
     setDisplayListForm(prev => prev=true)
@@ -69,6 +69,7 @@ function App() {
   const backgroundColor =  isDarkMode ? 'rgb(206,206,206)' : "#1E1E1E"
   const color = isDarkMode  ? "#1E1E1E" : 'rgb(206,206,206)' 
   const backgroundCard = isDarkMode ? '#FBFBFB' : '#6C6C6C'
+  const backgroundInput = isDarkMode ? '#FBFBFB' : '#6C6C6C'
 
 
 
@@ -95,26 +96,20 @@ function App() {
             backgroundColor={backgroundCard}
             color={color}
           />
-          <Button 
-            onClick={()=>setIsPlaying(!isPlaying)}
-            style={{
-              background: backgroundColor,
-              color: color,
-            }}
-          >
+          <Button onClick={()=>setIsPlaying(!isPlaying)} color={color}>
             {isPlaying ? "▣ Stop" : "▶ Play"}
           </Button>
         </>
       }
 
       {!selectedList && <p>Select a list please</p>}
-      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color} onAddList={()=>setDisplayListForm(prev=>!prev)} onDelete={()=>onDelete}/>
+      <ListsSelector lists={LISTS}  value={selectedList} onChange={setSelectedList} backgroundColor= {backgroundColor} color={color} onAddList={()=>setDisplayListForm(prev=>!prev)}/>
 
       <Button 
         onClick={()=>setIsDarkMode(visual=>!visual)}
+        color={color}
         style={{
           fontSize: "50px",
-          background: backgroundColor,
           color: color,
           position: 'absolute',
           bottom: '40px',
@@ -124,17 +119,33 @@ function App() {
       {isDarkMode === true ? "☾" : "☀"}
       </Button>
 
-      <Modal onOpen={displayListForm}>
-        {<Form color="#296abf" 
+      <Modal onOpen={displayListForm} backgroundColor={backgroundColor}>
+        {<>
+          <Form color={color} background={backgroundColor} backgroundInput={backgroundInput}
           closeForm={()=>setDisplayListForm(prev=>!prev)}
           addNewItem={addNewItem}
           sendForm={sendForm}
           style={{
             position: 'absolute',
-            top: '30%',
-            left:'30%',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%,-50%)',
           }}
-        />}
+        />
+        <Button 
+        onClick={()=>setIsDarkMode(visual=>!visual)}
+        color={color}
+        style={{
+          fontSize: "50px",
+          color: color,
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px'
+        }}
+      >
+      {isDarkMode === true ? "☾" : "☀"}
+      </Button>
+        </>}
       </Modal>
 
       <p
