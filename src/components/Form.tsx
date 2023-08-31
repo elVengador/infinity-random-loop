@@ -1,5 +1,6 @@
 import { CSSProperties } from "react"
 import { Button } from "./Button"
+import { Input } from "./Input"
 
 type FormProps = {
   color: string,
@@ -25,6 +26,7 @@ export const Form = ({ color, background, backgroundInput, style, closeForm, add
           color:color,
           background: background,
           borderRadius: '10px',
+          paddingTop: '20px',
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -32,26 +34,8 @@ export const Form = ({ color, background, backgroundInput, style, closeForm, add
           fontSize: '20px',
         }}>
         Create a New List
-        <input type="text" name="titleList"  placeholder="write name list"
-          style={{
-            color:color,
-            background: backgroundInput,
-            padding: '15px',
-            fontSize: '15px',
-            border: 'none',
-            borderRadius: '10px',
-          }}
-          />
-        <input type="text" name="item"  placeholder="write new item"
-          style={{
-            color:color,
-            background: backgroundInput,
-            padding: '15px',
-            fontSize: '15px',
-            border: 'none',
-            borderRadius: '10px',
-          }}
-        />
+        <Input type="text" placeholder="write name list" color={color} background={backgroundInput} border={color} />
+        <Input type="text" placeholder="write new item" color={color} background={backgroundInput} border={color} />
         <div 
         style={{
           fontSize:'10px',
@@ -62,8 +46,8 @@ export const Form = ({ color, background, backgroundInput, style, closeForm, add
           style={{
             fontSize: '20px',
             position: 'absolute',
-            top: '0px',
-            right: '0px'
+            top: '204px',
+            left: '40px'
           }}
           />
         <Button children="✕" onClick={addNewItem} color={color}
@@ -77,6 +61,9 @@ export const Form = ({ color, background, backgroundInput, style, closeForm, add
         <Button type="submit" children="✓" onClick={sendForm} color={color}
           style={{
             fontSize: '20px',
+            position: 'absolute',
+            top: '204px',
+            right: '40px'
           }}
         />
       </fieldset>

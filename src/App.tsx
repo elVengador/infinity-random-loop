@@ -58,7 +58,6 @@ function App() {
 
   const addNewItem = () => {
     console.log('add new item')
-    setDisplayListForm(prev => prev=true)
   }
   
   const sendForm = () => {
@@ -69,7 +68,7 @@ function App() {
   const backgroundColor =  isDarkMode ? 'rgb(206,206,206)' : "#1E1E1E"
   const color = isDarkMode  ? "#1E1E1E" : 'rgb(206,206,206)' 
   const backgroundCard = isDarkMode ? '#FBFBFB' : '#6C6C6C'
-  const backgroundInput = isDarkMode ? '#FBFBFB' : '#6C6C6C'
+  const backgroundInput = isDarkMode ? '#e5e5e5' : '#000'
 
 
 
