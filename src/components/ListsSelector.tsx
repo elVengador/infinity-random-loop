@@ -11,7 +11,6 @@ type ListsSelectorProps = {
   defaultValue?: string,
  };
 
-
  export const ListsSelector = ({ lists, value, defaultValue, onChange, backgroundColor, color }: ListsSelectorProps) => {
    const onChangeLists = (value:string)=> {
     const titleList = lists[value] 

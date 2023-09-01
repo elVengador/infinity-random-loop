@@ -39,7 +39,7 @@ function App() {
    */
   const [randomCard, setRandomCard] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedList, setSelectedList] = useState<SelectedList | null>(null);
+  const [selectedList, setSelectedList] = useState<SelectedList | null>({label: 'Note Musical',value:'noteMusical'});
   const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
@@ -79,13 +79,7 @@ function App() {
             backgroundColor={backgroundCard}
             color={color}
           />
-          <Button 
-            onclick={()=>setIsPlaying(!isPlaying)}
-            style={{
-              background: backgroundColor,
-              color: color,
-            }}
-          >
+          <Button onclick={()=>setIsPlaying(!isPlaying)} theme={isDarkMode ? 'dark' : 'light'}>
             {isPlaying ? "▣ Stop" : "▶ Play"}
           </Button>
         </>
@@ -96,10 +90,9 @@ function App() {
 
       <Button 
         onclick={()=>setIsDarkMode(visual=>!visual)}
+        theme={isDarkMode ? 'dark' : 'light'}
         style={{
           fontSize: "50px",
-          background: backgroundColor,
-          color: color,
           position: 'absolute',
           bottom: '40px',
           right: '40px'
