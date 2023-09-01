@@ -20,7 +20,7 @@ type ListsSelectorProps = {
     onChange(selectedList)
   }
 
-console.log({value})
+
 
   return (
     <div style={{
