@@ -79,14 +79,7 @@ function App() {
             backgroundColor={backgroundCard}
             color={color}
           />
-          <Button 
-            onclick={()=>setIsPlaying(!isPlaying)}
-            theme={isDarkMode ? 'dark' : 'light'}
-            style={{
-              // background: backgroundColor,
-              color: color,
-            }}
-          >
+          <Button onclick={()=>setIsPlaying(!isPlaying)} theme={isDarkMode ? 'dark' : 'light'}>
             {isPlaying ? "▣ Stop" : "▶ Play"}
           </Button>
         </>
@@ -100,7 +93,6 @@ function App() {
         theme={isDarkMode ? 'dark' : 'light'}
         style={{
           fontSize: "50px",
-          // background: backgroundColor,
           position: 'absolute',
           bottom: '40px',
           right: '40px'
