@@ -60,6 +60,11 @@ function App() {
   return (
     <div
       style={{
+        position:"absolute",
+        left:"0px",
+        top:"0px",
+        right:"0px",
+        bottom:"0px",
         height: '100%',
         width: '100%',
         display: 'flex',
