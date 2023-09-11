@@ -1,4 +1,4 @@
-import { CSSProperties } from "react"
+import { CSSProperties, useState } from "react"
 import { Button } from "./Button"
 import { Input } from "./Input"
 
@@ -7,12 +7,17 @@ type FormProps = {
   background: string,
   backgroundInput: string,
   closeForm: ()=>void,
-  addNewItem: ()=>void,
+  // addNewItem?: ()=>void,
   sendForm: ()=>void,
   style?: CSSProperties
 }
 
-export const Form = ({ color, background, backgroundInput, style, closeForm, addNewItem, sendForm}: FormProps) => {
+export const Form = ({ color, background, backgroundInput, style, closeForm, sendForm}: FormProps) => {
+  const [displayNewItem, setDisplayNewItem] = useState(false)
+
+  function addNewItem(): void {
+    throw new Error("Function not implemented.")
+  }
 
   return (
     <form action=""
@@ -35,7 +40,8 @@ export const Form = ({ color, background, backgroundInput, style, closeForm, add
         }}>
         Create a New List
         <Input type="text" placeholder="write name list" color={color} background={backgroundInput} border={color} />
-        <Input type="text" placeholder="write new item" color={color} background={backgroundInput} border={color} />
+        {!displayNewItem ? <Input type="text" placeholder="write new item" color={color} background={backgroundInput} border={color} /> : null}
+        {}
         <div 
         style={{
           fontSize:'10px',

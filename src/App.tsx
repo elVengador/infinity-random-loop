@@ -1,8 +1,10 @@
 import "./App.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from "react";
+
 import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
 import { Card } from "./components/Card";
-
 import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Form } from "./components/Form";
 import { Button } from "./components/Button";
@@ -56,9 +58,9 @@ function App() {
     return () => clearInterval(intervalId);
   }, [isPlaying]);
 
-  const addNewItem = () => {
-    console.log('add new item')
-  }
+  // const addNewItem = () => {
+  //   console.log('add new item')
+  // }
   
   const sendForm = () => {
     console.log('send form')
@@ -118,32 +120,33 @@ function App() {
       {isDarkMode === true ? "☾" : "☀"}
       </Button>
 
+      <FontAwesomeIcon icon={faCoffee} />
+
       <Modal onOpen={displayListForm} backgroundColor={backgroundColor}>
         {<>
           <Form color={color} background={backgroundColor} backgroundInput={backgroundInput}
-          closeForm={()=>setDisplayListForm(prev=>!prev)}
-          addNewItem={addNewItem}
-          sendForm={sendForm}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-          }}
-        />
-        <Button 
-        onClick={()=>setIsDarkMode(visual=>!visual)}
-        color={color}
-        style={{
-          fontSize: "50px",
-          color: color,
-          position: 'absolute',
-          bottom: '40px',
-          right: '40px'
-        }}
-      >
-      {isDarkMode === true ? "☾" : "☀"}
-      </Button>
+            closeForm={()=>setDisplayListForm(prev=>!prev)}
+            sendForm={sendForm}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%,-50%)',
+            }}
+          />
+          <Button 
+            onClick={()=>setIsDarkMode(visual=>!visual)}
+            color={color}
+            style={{
+              fontSize: "50px",
+              color: color,
+              position: 'absolute',
+              bottom: '40px',
+              right: '40px'
+            }}
+           >
+           {isDarkMode === true ? "☾" : "☀"}
+           </Button>
         </>}
       </Modal>
 
