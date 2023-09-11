@@ -1,7 +1,7 @@
 import { CSSProperties } from "react"
 
 type ButtonProps = {
-  children:string, 
+  children:string | JSX.Element, 
   onClick?:()=>void,
   color:string,
   style?: CSSProperties,

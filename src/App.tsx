@@ -1,6 +1,6 @@
 import "./App.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faMoon, faPlay, faStop, faSun } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from "react";
 
 import { ENGLISH_ADVANCED_VOCABULARY_LIST, ENGLISH_BASIC_VOCABULARY_LIST, ENGLISH_INTERMEDIATE_VOCABULARY_LIST, NOTE_MUSICAL_LIST } from "./constants";
@@ -98,7 +98,7 @@ function App() {
             color={color}
           />
           <Button onClick={()=>setIsPlaying(!isPlaying)} color={color}>
-            {isPlaying ? "▣ Stop" : "▶ Play"}
+            {isPlaying ? <FontAwesomeIcon icon={faStop} /> : <FontAwesomeIcon icon={faPlay} />}
           </Button>
         </>
       }
@@ -117,10 +117,8 @@ function App() {
           right: '40px'
         }}
       >
-      {isDarkMode === true ? "☾" : "☀"}
+      {isDarkMode === true ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
       </Button>
-
-      <FontAwesomeIcon icon={faCoffee} />
 
       <Modal onOpen={displayListForm} backgroundColor={backgroundColor}>
         {<>
@@ -145,7 +143,7 @@ function App() {
               right: '40px'
             }}
            >
-           {isDarkMode === true ? "☾" : "☀"}
+           {isDarkMode === true ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
            </Button>
         </>}
       </Modal>

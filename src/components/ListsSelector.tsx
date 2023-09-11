@@ -1,5 +1,7 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SelectedList } from "../App";
 import { Button } from "./Button";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export type Lists= {[key:string]:{value:string[], label:string}}
 
@@ -50,10 +52,9 @@ type ListsSelectorProps = {
       >
         {Object.keys(lists).map((key,idx)=><option style={{background: backgroundColor, color: color, }} key={idx} value={key} >{lists[key]['label']}</option>)}
       </select>
-      <Button children="✕" onClick={onAddList} color={color} style={{
-          transform: 'rotate(45deg)' ,
-        }}
-      />
+      <Button onClick={onAddList} color={color}>
+        <FontAwesomeIcon icon={faPlus} />
+      </Button>
     </div>
   );
 };
