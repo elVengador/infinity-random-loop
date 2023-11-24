@@ -5,6 +5,7 @@ import {
   ENGLISH_BASIC_VOCABULARY_LIST,
   ENGLISH_INTERMEDIATE_VOCABULARY_LIST,
   NOTE_MUSICAL_LIST,
+  BASIC_CHORDS
 } from "./constants";
 import { Card } from "./components/Card";
 import { ListsSelector, Lists } from "./components/ListsSelector";
@@ -29,6 +30,10 @@ const LISTS: Lists = {
     value: ENGLISH_ADVANCED_VOCABULARY_LIST,
     label: "English Advanced Vocabulary",
   },
+  basicChords:{
+    value:BASIC_CHORDS,
+    label:"Basic Chords"
+  }
 };
 
 const randomValue = (values: string[]): string => {
@@ -66,13 +71,13 @@ function App() {
 
   useEffect(() => {
     if (!isPlaying) return;
+    if (!selectedList) return
     const intervalId = setInterval(() => {
-      if (!selectedList) return console.log("not exist list");
 
       setRandomCard(randomValue(LISTS[selectedList.value].value));
     }, 1000);
     return () => clearInterval(intervalId);
-  }, [isPlaying]);
+  }, [isPlaying, selectedList]);
 
   const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
   const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";

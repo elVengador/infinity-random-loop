@@ -326,3 +326,4 @@ export const ENGLISH_ADVANCED_VOCABULARY_LIST: string[] = [
   "zealotry"
 ];
 
+export const BASIC_CHORDS: string[] = ["C","D","E","G","A","Am","Em","Dm"]
