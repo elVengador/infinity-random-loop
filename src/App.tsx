@@ -5,11 +5,18 @@ import {
   ENGLISH_BASIC_VOCABULARY_LIST,
   ENGLISH_INTERMEDIATE_VOCABULARY_LIST,
   NOTE_MUSICAL_LIST,
-  BASIC_CHORDS
+  BASIC_CHORDS,
 } from "./constants";
 import { Card } from "./components/Card";
 import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Button } from "./components/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMoon,
+  faPlay,
+  faSquare,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
 
 export type SelectedList = {
   label: string;
@@ -30,10 +37,10 @@ const LISTS: Lists = {
     value: ENGLISH_ADVANCED_VOCABULARY_LIST,
     label: "English Advanced Vocabulary",
   },
-  basicChords:{
-    value:BASIC_CHORDS,
-    label:"Basic Chords"
-  }
+  basicChords: {
+    value: BASIC_CHORDS,
+    label: "Basic Chords",
+  },
 };
 
 const randomValue = (values: string[]): string => {
@@ -71,9 +78,8 @@ function App() {
 
   useEffect(() => {
     if (!isPlaying) return;
-    if (!selectedList) return
+    if (!selectedList) return;
     const intervalId = setInterval(() => {
-
       setRandomCard(randomValue(LISTS[selectedList.value].value));
     }, 1000);
     return () => clearInterval(intervalId);
@@ -113,7 +119,15 @@ function App() {
             onclick={() => setIsPlaying(!isPlaying)}
             theme={isDarkMode ? "dark" : "light"}
           >
-            {isPlaying ? "▣ Stop" : "▶ Play"}
+            {isPlaying ? (
+              <>
+                <FontAwesomeIcon icon={faSquare} /> Stop
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faPlay} /> Play
+              </>
+            )}
           </Button>
         </>
       )}
@@ -131,13 +145,19 @@ function App() {
         onclick={() => setIsDarkMode((visual) => !visual)}
         theme={isDarkMode ? "dark" : "light"}
         style={{
-          fontSize: "50px",
           position: "absolute",
           bottom: "40px",
           right: "40px",
+          width: "50px",
+          height: "50px",
+          padding: "0px",
         }}
       >
-        {isDarkMode === true ? "☾" : "☀"}
+        {isDarkMode ? (
+          <FontAwesomeIcon icon={faMoon} />
+        ) : (
+          <FontAwesomeIcon icon={faSun} />
+        )}
       </Button>
 
       <p

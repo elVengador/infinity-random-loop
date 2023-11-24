@@ -1,10 +1,10 @@
-import { CSSProperties } from "react"
+import { CSSProperties, ReactNode } from "react"
 import styled from "styled-components";
 
 type ThemeType = 'dark' | 'light'
 
 type ButtonProps = {
-  children:string, 
+  children:ReactNode, 
   theme:ThemeType, 
   onclick?:()=>void,
   style?: CSSProperties,
