@@ -16,7 +16,10 @@ import {
   faPlay,
   faSquare,
   faSun,
+  faVolumeMute,
+  faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { narrateText } from "./helpers";
 
 export type SelectedList = {
   label: string;
@@ -75,15 +78,18 @@ function App() {
     value: "noteMusical",
   });
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [canNarrate, setCanNarrate] = useState(false);
 
   useEffect(() => {
     if (!isPlaying) return;
     if (!selectedList) return;
     const intervalId = setInterval(() => {
-      setRandomCard(randomValue(LISTS[selectedList.value].value));
+      const newRandomValue = randomValue(LISTS[selectedList.value].value);
+      setRandomCard(newRandomValue);
+      if(canNarrate) narrateText(newRandomValue.toLowerCase());
     }, 1000);
     return () => clearInterval(intervalId);
-  }, [isPlaying, selectedList]);
+  }, [canNarrate, isPlaying, selectedList]);
 
   const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
   const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";
@@ -141,24 +147,47 @@ function App() {
         color={color}
       />
 
-      <Button
-        onclick={() => setIsDarkMode((visual) => !visual)}
-        theme={isDarkMode ? "dark" : "light"}
+      <div
         style={{
           position: "absolute",
           bottom: "40px",
           right: "40px",
-          width: "50px",
-          height: "50px",
-          padding: "0px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
         }}
       >
-        {isDarkMode ? (
-          <FontAwesomeIcon icon={faMoon} />
-        ) : (
-          <FontAwesomeIcon icon={faSun} />
-        )}
-      </Button>
+        <Button
+          onclick={() => setCanNarrate((prev) => !prev)}
+          theme={isDarkMode ? "dark" : "light"}
+          style={{
+            width: "50px",
+            height: "50px",
+            padding: "0px",
+          }}
+        >
+          {canNarrate ? (
+            <FontAwesomeIcon icon={faVolumeUp} />
+            ) : (
+              <FontAwesomeIcon icon={faVolumeMute} />
+          )}
+        </Button>
+        <Button
+          onclick={() => setIsDarkMode((visual) => !visual)}
+          theme={isDarkMode ? "dark" : "light"}
+          style={{
+            width: "50px",
+            height: "50px",
+            padding: "0px",
+          }}
+        >
+          {isDarkMode ? (
+            <FontAwesomeIcon icon={faMoon} />
+          ) : (
+            <FontAwesomeIcon icon={faSun} />
+          )}
+        </Button>
+      </div>
 
       <p
         style={{
