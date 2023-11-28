@@ -145,7 +145,6 @@ function App() {
         style={{
           display: "flex",
           flexDirection: "column",
-          // gap: "10px",
           marginBottom: "50px",
         }}
       >
@@ -155,15 +154,28 @@ function App() {
           onChange={setSelectedList}
           backgroundColor={backgroundColor}
           color={color}
-          // style={{}}
         />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "230px",
+          right: "12px",
+        }}
+      >
         <label
           htmlFor="speed-controler"
           style={{
-            // border: "solid 2px red",
             width: "100%",
+            height: "129px",
             display: "flex",
+            flexDirection: "column-reverse",
+            alignItems: "center",
             justifyContent: "space-between",
+            position: "absolute",
+            bottom: "-52px",
+            right: "-24px",
           }}
         >
           <span style={{ fontSize: "12px" }}>0.5 s</span>
@@ -180,6 +192,9 @@ function App() {
           step={500}
           value={speed}
           onChange={(e) => setSpeed(Number(e.target.value))}
+          style={{
+            transform: "rotate(270deg)",
+          }}
         />
       </div>
 
