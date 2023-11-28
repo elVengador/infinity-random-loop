@@ -79,6 +79,7 @@ function App() {
   });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [canNarrate, setCanNarrate] = useState(false);
+  const [speed, setSpeed] = useState(1000);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -86,10 +87,10 @@ function App() {
     const intervalId = setInterval(() => {
       const newRandomValue = randomValue(LISTS[selectedList.value].value);
       setRandomCard(newRandomValue);
-      if(canNarrate) narrateText(newRandomValue.toLowerCase());
-    }, 1000);
+      if (canNarrate) narrateText(newRandomValue.toLowerCase());
+    }, speed);
     return () => clearInterval(intervalId);
-  }, [canNarrate, isPlaying, selectedList]);
+  }, [canNarrate, isPlaying, selectedList, speed]);
 
   const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
   const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";
@@ -139,13 +140,63 @@ function App() {
       )}
 
       {!selectedList && <p>Select a list please</p>}
-      <ListsSelector
-        lists={LISTS}
-        value={selectedList}
-        onChange={setSelectedList}
-        backgroundColor={backgroundColor}
-        color={color}
-      />
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginBottom: "50px",
+        }}
+      >
+        <ListsSelector
+          lists={LISTS}
+          value={selectedList}
+          onChange={setSelectedList}
+          backgroundColor={backgroundColor}
+          color={color}
+        />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "230px",
+          right: "12px",
+        }}
+      >
+        <label
+          htmlFor="speed-controler"
+          style={{
+            width: "100%",
+            height: "129px",
+            display: "flex",
+            flexDirection: "column-reverse",
+            alignItems: "center",
+            justifyContent: "space-between",
+            position: "absolute",
+            bottom: "-52px",
+            right: "-24px",
+          }}
+        >
+          <span style={{ fontSize: "12px" }}>0.5 s</span>
+          <span style={{ fontSize: "16px", fontWeight: "bold" }}>
+            {speed / 1000} s
+          </span>
+          <span style={{ fontSize: "12px" }}>5 s</span>
+        </label>
+        <input
+          id="speed-controler"
+          type="range"
+          min={500}
+          max={5000}
+          step={500}
+          value={speed}
+          onChange={(e) => setSpeed(Number(e.target.value))}
+          style={{
+            transform: "rotate(270deg)",
+          }}
+        />
+      </div>
 
       <div
         style={{
@@ -168,8 +219,8 @@ function App() {
         >
           {canNarrate ? (
             <FontAwesomeIcon icon={faVolumeUp} />
-            ) : (
-              <FontAwesomeIcon icon={faVolumeMute} />
+          ) : (
+            <FontAwesomeIcon icon={faVolumeMute} />
           )}
         </Button>
         <Button
