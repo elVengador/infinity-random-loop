@@ -7,6 +7,7 @@ type ButtonProps = {
   children:ReactNode, 
   theme:ThemeType, 
   onclick?:()=>void,
+  title?:string
   style?: CSSProperties,
 }
 
@@ -23,13 +24,14 @@ const ButtonStyled = styled.button<{ $theme?: ThemeType; }>`
   }
 `;
 
-export const Button = ({children, onclick, style, theme}:ButtonProps) => {
+export const Button = ({children, onclick,title="", style, theme}:ButtonProps) => {
   return(
     <ButtonStyled 
       onClick={onclick}
       $theme={theme}
       style={{...style}}
       className="custom-button"
+      title={title}
       >
       {children}
     </ButtonStyled>

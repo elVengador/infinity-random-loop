@@ -122,20 +122,6 @@ function App() {
             backgroundColor={backgroundCard}
             color={color}
           />
-          <Button
-            onclick={() => setIsPlaying(!isPlaying)}
-            theme={isDarkMode ? "dark" : "light"}
-          >
-            {isPlaying ? (
-              <>
-                <FontAwesomeIcon icon={faSquare} /> Stop
-              </>
-            ) : (
-              <>
-                <FontAwesomeIcon icon={faPlay} /> Play
-              </>
-            )}
-          </Button>
         </>
       )}
 
@@ -143,8 +129,10 @@ function App() {
 
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
+          display: "grid",
+          gridTemplateColumns:"1fr auto",
+          gap:"10px",
+          alignItems:"center",
           marginBottom: "50px",
         }}
       >
@@ -155,6 +143,21 @@ function App() {
           backgroundColor={backgroundColor}
           color={color}
         />
+        <Button
+            onclick={() => setIsPlaying(!isPlaying)}
+            theme={isDarkMode ? "dark" : "light"}
+            title={isPlaying? "Stop loop":"Play loop"}
+          >
+            {isPlaying ? (
+              <>
+                <FontAwesomeIcon icon={faSquare} />
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faPlay} />
+              </>
+            )}
+          </Button>
       </div>
 
       <div

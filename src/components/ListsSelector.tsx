@@ -35,7 +35,6 @@ export const ListsSelector = ({
         display: "flex",
         flexDirection: "column",
         cursor: "pointer",
-        marginBottom: "20px",
       }}
     >
       <div
