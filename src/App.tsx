@@ -12,12 +12,10 @@ import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faGear,
   faMoon,
   faPause,
   faPlay,
   faRunning,
-  faSquare,
   faSun,
   faVolumeMute,
   faVolumeUp,
