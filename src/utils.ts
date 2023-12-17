@@ -14,3 +14,5 @@ export const narrateText = async (message: string) => {
       window.speechSynthesis.speak(speech);
     });
   };
+
+  export const getRandomInteger = (max: number) => Math.floor(Math.random() * max);

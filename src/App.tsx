@@ -1,16 +1,10 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import {
-  ENGLISH_ADVANCED_VOCABULARY_LIST,
-  ENGLISH_BASIC_VOCABULARY_LIST,
-  ENGLISH_INTERMEDIATE_VOCABULARY_LIST,
-  NOTE_MUSICAL_LIST,
-  BASIC_CHORDS,
-} from "./constants";
 import { Card } from "./components/Card";
-import { ListsSelector, Lists } from "./components/ListsSelector";
+import { SetSelector } from "./components/ListsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {Set} from "./components/OptionsMenu"
 import {
   faMoon,
   faPause,
@@ -20,84 +14,49 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { narrateText } from "./helpers";
+import { getRandomInteger, narrateText } from "./utils";
 import { SpeedInput } from "./components/SpeedInput";
+import { BASIC_CHORDS, ENGLISH_ADVANCED_VOCABULARY, ENGLISH_BASIC_VOCABULARY, ENGLISH_INTERMEDIATE_VOCABULARY, MUSICAL_NOTES } from "./constants";
 
-export type SelectedList = {
-  label: string;
-  value: string;
-};
-
-const LISTS: Lists = {
-  noteMusical: { value: NOTE_MUSICAL_LIST, label: "Note Musical" },
-  englishBasicVocabulary: {
-    value: ENGLISH_BASIC_VOCABULARY_LIST,
-    label: "English Basic Vocabulary",
-  },
-  englishIntermediateVocabulary: {
-    value: ENGLISH_INTERMEDIATE_VOCABULARY_LIST,
-    label: "English Intermediate Vocabulary",
-  },
-  englishAdvancedVocabulary: {
-    value: ENGLISH_ADVANCED_VOCABULARY_LIST,
-    label: "English Advanced Vocabulary",
-  },
-  basicChords: {
-    value: BASIC_CHORDS,
-    label: "Basic Chords",
-  },
-};
-
-const randomValue = (values: string[]): string => {
-  const randomIdx = Math.floor(Math.random() * values.length);
-  return values[randomIdx];
-};
+const INITIAL_SETS: Set[] = [
+  MUSICAL_NOTES,BASIC_CHORDS,ENGLISH_BASIC_VOCABULARY,ENGLISH_INTERMEDIATE_VOCABULARY,ENGLISH_ADVANCED_VOCABULARY
+];
 
 function App() {
-  /**
-   * TODO:
-   * - create selectedList state with type <{{label:string,value:string}}>
-   * - create a object lists = { nameOfList1: [...hereDestructureTheListFromConstant], nameOfList2:[], ...}
-   * - add the click event on the <option/> Html element to change the selectedList
-   * - use the selected list to generate a the random value
-   * - create a PR
-   *
-   * TODO:
-   * - discommend the add and edit button from AllLists component
-   * - create a state displayListForm
-   * - create a Modal with position absolute and display if displayListForm is True
-   * - send {data:{title:string,list:selectedList},isNew:boolean} to the Modal
-   * - when create a new List isNew=false and data:{title:"",data:[]}
-   * - when edit a list isNew=true and data: {title:"the title of the list",data:selectedList}
-   * - add a button on the modal with "Save" text, when clicks on this button should add the object lists with the title as key and data as the value, then close the modal
-   * - similar to edit
-   * - create PR
-   */
-  const [randomCard, setRandomCard] = useState("");
+  const [randomValue, setRandomValue] = useState<string>("");
+  const [options, setOptions] = useState<Set[]>(INITIAL_SETS);
+  const [selectedOptions, setSelectedOption] = useState<Set | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedList, setSelectedList] = useState<SelectedList | null>({
-    label: "Note Musical",
-    value: "noteMusical",
-  });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [canNarrate, setCanNarrate] = useState(false);
   const [speed, setSpeed] = useState(1000);
-  const [displaySpeedController, setDisplaySpeedController] = useState(false)
+  const [displaySpeedController, setDisplaySpeedController] = useState(false);
+
+  const getRandomValue = (option:Set)=>{
+    const items = option.values.split(',').map(c=>c.trim())
+    const randomIndex = getRandomInteger(items.length - 1);
+    const newRandomValue = items[randomIndex];
+    return newRandomValue
+  }
 
   useEffect(() => {
     if (!isPlaying) return;
-    if (!selectedList) return;
+    if (!selectedOptions) return;
     const intervalId = setInterval(() => {
-      const newRandomValue = randomValue(LISTS[selectedList.value].value);
-      setRandomCard(newRandomValue);
+      const newRandomValue = getRandomValue(selectedOptions)
+      setRandomValue(newRandomValue);
       if (canNarrate) narrateText(newRandomValue.toLowerCase());
     }, speed);
     return () => clearInterval(intervalId);
-  }, [canNarrate, isPlaying, selectedList, speed]);
+  }, [canNarrate, isPlaying, selectedOptions, speed]);
 
   const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
   const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";
   const backgroundCard = isDarkMode ? "#FBFBFB" : "#6C6C6C";
+
+  const onChangeOptionByIdx = (optionIdx: number,newOption: Set) => {
+    setOptions(prev=>prev.map((c,i)=>i===optionIdx?newOption:c))
+  }
 
   return (
     <div
@@ -186,20 +145,21 @@ function App() {
             gap: "24px",
           }}
         >
-          {selectedList && (
+          {selectedOptions && randomValue && (
             <Card
-              value={randomCard}
+              value={randomValue}
               backgroundColor={backgroundCard}
               color={color}
               style={{ maxWidth: "500px", maxHeight: "300px" }}
             />
           )}
 
-          {!selectedList && <p>Select a list please</p>}
+          {!selectedOptions && <p>Select a list please</p>}
 
           {/* controls */}
           <div
             style={{
+              width:"100%",
               maxWidth: "400px",
               display: "grid",
               gridTemplateColumns: "auto 1fr auto",
@@ -208,23 +168,26 @@ function App() {
             }}
           >
             <Button
-              onclick={() => setDisplaySpeedController(prev=>!prev)}
+              onclick={() => setDisplaySpeedController((prev) => !prev)}
               theme={isDarkMode ? "dark" : "light"}
               title={"More Options"}
-              style={{ width: "36px", height: "36px", padding: "0px",color:displaySpeedController?"#3d9eff":"inherit" }}
+              style={{
+                width: "36px",
+                height: "36px",
+                padding: "0px",
+                color: displaySpeedController ? "#3d9eff" : "inherit",
+              }}
             >
-              {/* <FontAwesomeIcon icon={faGear} size="xs" /> */}
               <FontAwesomeIcon icon={faRunning} size="xs" />
             </Button>
-            <ListsSelector
-              lists={LISTS}
-              value={selectedList}
-              onChange={setSelectedList}
-              backgroundColor={backgroundColor}
-              color={color}
+            <SetSelector
+              set={options}
+              selectSet={setSelectedOption}
+              selectedSet={selectedOptions}
+              editSetByIdx={onChangeOptionByIdx}
             />
             <Button
-              onclick={() => setIsPlaying(prev=>!prev)}
+              onclick={() => setIsPlaying((prev) => !prev)}
               theme={isDarkMode ? "dark" : "light"}
               title={isPlaying ? "Stop loop" : "Play loop"}
               style={{ width: "36px", height: "36px", padding: "0px" }}
@@ -237,8 +200,10 @@ function App() {
             </Button>
           </div>
           {/* other controls */}
-          <div style={{width:"100%",maxWidth:"300px",minHeight:"40px"}}>
-          {displaySpeedController &&<SpeedInput speed={speed} setSpeed={setSpeed} />}
+          <div style={{ width: "100%", maxWidth: "300px", minHeight: "40px" }}>
+            {displaySpeedController && (
+              <SpeedInput speed={speed} setSpeed={setSpeed} />
+            )}
           </div>
         </section>
       </main>

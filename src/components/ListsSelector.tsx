@@ -1,66 +1,118 @@
-import { SelectedList } from "../App";
-
-export type Lists = { [key: string]: { value: string[]; label: string } };
+import { faAngleDown, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import styled from "styled-components";
+import { SetMenu, Set } from "./OptionsMenu";
+import { Button } from "./Button";
 
 type ListsSelectorProps = {
-  lists: Lists;
-  value: SelectedList | null;
-  onChange: (value: SelectedList | null) => void;
-  backgroundColor: string;
-  color: string;
-  defaultValue?: string;
+  set: Set[];
+  selectedSet: Set | null;
+  selectSet: (newValue: Set) => void;
+  editSetByIdx: (idx: number, newValue: Set) => void;
 };
 
-export const ListsSelector = ({
-  lists,
-  value,
-  defaultValue,
-  onChange,
-  backgroundColor,
-  color,
+export const SetSelector = ({
+  set,
+  selectedSet,
+  selectSet,
+  editSetByIdx,
 }: ListsSelectorProps) => {
-  const onChangeLists = (value: string) => {
-    const titleList = lists[value];
-    if (!titleList) return;
+  const [displayOptions, setDisplayOptions] = useState(false);
 
-    const selectedList: SelectedList = { value, label: titleList.label };
-    onChange(selectedList);
-  };
+  const onSelectSet = useCallback(
+    (newValue: Set) => {
+      selectSet(newValue);
+      setDisplayOptions(false);
+    },
+    [selectSet]
+  );
+
+  const OptionsModal = useMemo(() => {
+    return (
+      <WrapperOverlay>
+        <Modal>
+          <ModalHeader>
+            <Button
+              onclick={() => {
+                console.log("click clicked");
+                setDisplayOptions(false);
+              }}
+              theme="dark"
+              style={{ backgroundColor: "#cdcdcd" }}
+            >
+              <>
+                Back <FontAwesomeIcon icon={faArrowLeft} />
+              </>
+            </Button>
+          </ModalHeader>
+          <ModalMain>
+            <SetMenu
+              selectSet={onSelectSet}
+              set={set}
+              selectedSet={selectedSet}
+              changeSetByIdx={editSetByIdx}
+            />
+          </ModalMain>
+        </Modal>
+      </WrapperOverlay>
+    );
+  }, [editSetByIdx, onSelectSet, selectedSet, set]);
 
   return (
-    <div
-      style={{
-        border: "none",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <select
-        id=""
-        value={value ? value.value : undefined}
-        defaultValue={defaultValue}
-        onChange={(e) => onChangeLists(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "8px",
-          background: backgroundColor,
-          fontSize: "16px",
-          color: color,
-          border:"none",
-          cursor: "pointer",
-        }}
-      >
-        {Object.keys(lists).map((key, idx) => (
-          <option
-            style={{ background: backgroundColor, color: color }}
-            key={idx}
-            value={key}
-          >
-            {lists[key]["label"]}
-          </option>
-        ))}
-      </select>
-    </div>
+    <ListSelectorWrapper>
+      <SelectedItem onClick={() => setDisplayOptions((p) => !p)} role="button">
+        {selectedSet
+          ? selectedSet.label
+          : "Select a options to start to practice with random elements"}
+        <FontAwesomeIcon icon={faAngleDown} size="sm" />
+      </SelectedItem>
+      {displayOptions && createPortal(OptionsModal, document.body)}
+    </ListSelectorWrapper>
   );
 };
+
+const ListSelectorWrapper = styled.div`
+  border: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const SelectedItem = styled.div`
+  width: 100%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(62, 62, 62);
+  }
+`;
+
+const WrapperOverlay = styled.div`
+  padding: 20px;
+  position: absolute;
+  inset: 0px;
+  display: grid;
+  place-items: center;
+  background-color: #6a6a6a9c;
+  backdrop-filter: blur(10px);
+`;
+
+const Modal = styled.div`
+  width: 100%;
+  max-width: 600px;
+  max-height: 600px;
+`;
+
+const ModalHeader = styled.div`
+  padding: 8px;
+`;
+
+const ModalMain = styled.div`
+  padding: 8px;
+`;
