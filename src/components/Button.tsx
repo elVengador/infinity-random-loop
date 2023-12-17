@@ -13,7 +13,7 @@ type ButtonProps = {
 
 const ButtonStyled = styled.button<{ $theme?: ThemeType; }>`
   border: none;
-  padding: 10px;
+  padding: 4px;
   font-size: 30px;
   cursor: pointer;
   background: transparent;

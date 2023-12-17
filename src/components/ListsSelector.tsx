@@ -30,20 +30,12 @@ export const ListsSelector = ({
   return (
     <div
       style={{
-        border: `solid 1px ${color}`,
-        width: "280px",
+        border: "none",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        cursor: "pointer",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      ></div>
       <select
         id=""
         value={value ? value.value : undefined}
@@ -55,6 +47,8 @@ export const ListsSelector = ({
           background: backgroundColor,
           fontSize: "16px",
           color: color,
+          border:"none",
+          cursor: "pointer",
         }}
       >
         {Object.keys(lists).map((key, idx) => (

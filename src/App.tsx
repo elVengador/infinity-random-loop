@@ -12,14 +12,18 @@ import { ListsSelector, Lists } from "./components/ListsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faGear,
   faMoon,
+  faPause,
   faPlay,
+  faRunning,
   faSquare,
   faSun,
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { narrateText } from "./helpers";
+import { SpeedInput } from "./components/SpeedInput";
 
 export type SelectedList = {
   label: string;
@@ -80,6 +84,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [canNarrate, setCanNarrate] = useState(false);
   const [speed, setSpeed] = useState(1000);
+  const [displaySpeedController, setDisplaySpeedController] = useState(false)
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -99,159 +104,159 @@ function App() {
   return (
     <div
       style={{
-        position: "absolute",
-        left: "0px",
-        top: "0px",
-        right: "0px",
-        bottom: "0px",
         height: "100%",
         width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "30px",
+        display: "grid",
+        gridTemplateRows: "50px 1fr 30px",
+        gridTemplateColumns: "1fr",
         background: backgroundColor,
         color: color,
       }}
     >
-      {selectedList && (
-        <>
-          <Card
-            value={randomCard}
-            backgroundColor={backgroundCard}
-            color={color}
-          />
-        </>
-      )}
-
-      {!selectedList && <p>Select a list please</p>}
-
-      <div
+      <header
         style={{
-          display: "grid",
-          gridTemplateColumns:"1fr auto",
-          gap:"10px",
-          alignItems:"center",
-          marginBottom: "50px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          maxWidth: "1000px",
+          width: "100%",
+          margin: "0px auto",
+          padding: "4px 8px",
         }}
       >
-        <ListsSelector
-          lists={LISTS}
-          value={selectedList}
-          onChange={setSelectedList}
-          backgroundColor={backgroundColor}
-          color={color}
-        />
-        <Button
-            onclick={() => setIsPlaying(!isPlaying)}
+        <h1 style={{ fontSize: "20px", textAlign: "center", margin: "0px" }}>
+          Infinity Random Loop
+        </h1>
+        <section
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "20px",
+          }}
+        >
+          <Button
+            onclick={() => setIsDarkMode((visual) => !visual)}
             theme={isDarkMode ? "dark" : "light"}
-            title={isPlaying? "Stop loop":"Play loop"}
+            style={{ padding: "0px", width: "36px", height: "36px" }}
+            title={
+              isDarkMode ? "Change to light theme" : "Change to dark theme"
+            }
           >
-            {isPlaying ? (
-              <>
-                <FontAwesomeIcon icon={faSquare} />
-              </>
+            {isDarkMode ? (
+              <FontAwesomeIcon icon={faMoon} size="xs" />
             ) : (
-              <>
-                <FontAwesomeIcon icon={faPlay} />
-              </>
+              <FontAwesomeIcon icon={faSun} size="xs" />
             )}
           </Button>
-      </div>
+          <Button
+            onclick={() => setCanNarrate((prev) => !prev)}
+            theme={isDarkMode ? "dark" : "light"}
+            title={canNarrate ? "Disable narrator" : "Enable narrator"}
+            style={{ padding: "0px", width: "36px", height: "36px" }}
+          >
+            {canNarrate ? (
+              <FontAwesomeIcon icon={faVolumeUp} size="xs" />
+            ) : (
+              <FontAwesomeIcon icon={faVolumeMute} size="xs" />
+            )}
+          </Button>
+        </section>
+      </header>
 
-      <div
+      <main
         style={{
-          position: "absolute",
-          bottom: "230px",
-          right: "12px",
+          padding: "4px 8px",
+          position: "relative",
+          maxWidth: "1000px",
+          width: "100%",
+          margin: "0px auto",
+          display: "grid",
+          placeItems: "center",
         }}
       >
-        <label
-          htmlFor="speed-controler"
+        {/* cards */}
+        <section
           style={{
             width: "100%",
-            height: "129px",
+            height: "100%",
+            padding: "24px",
             display: "flex",
-            flexDirection: "column-reverse",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "space-between",
-            position: "absolute",
-            bottom: "-52px",
-            right: "-24px",
+            justifyContent: "center",
+            gap: "24px",
           }}
         >
-          <span style={{ fontSize: "12px" }}>0.5 s</span>
-          <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-            {speed / 1000} s
-          </span>
-          <span style={{ fontSize: "12px" }}>5 s</span>
-        </label>
-        <input
-          id="speed-controler"
-          type="range"
-          min={500}
-          max={5000}
-          step={500}
-          value={speed}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          style={{
-            transform: "rotate(270deg)",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          right: "40px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
-        <Button
-          onclick={() => setCanNarrate((prev) => !prev)}
-          theme={isDarkMode ? "dark" : "light"}
-          style={{
-            width: "50px",
-            height: "50px",
-            padding: "0px",
-          }}
-        >
-          {canNarrate ? (
-            <FontAwesomeIcon icon={faVolumeUp} />
-          ) : (
-            <FontAwesomeIcon icon={faVolumeMute} />
+          {selectedList && (
+            <Card
+              value={randomCard}
+              backgroundColor={backgroundCard}
+              color={color}
+              style={{ maxWidth: "500px", maxHeight: "300px" }}
+            />
           )}
-        </Button>
-        <Button
-          onclick={() => setIsDarkMode((visual) => !visual)}
-          theme={isDarkMode ? "dark" : "light"}
-          style={{
-            width: "50px",
-            height: "50px",
-            padding: "0px",
-          }}
-        >
-          {isDarkMode ? (
-            <FontAwesomeIcon icon={faMoon} />
-          ) : (
-            <FontAwesomeIcon icon={faSun} />
-          )}
-        </Button>
-      </div>
 
-      <p
+          {!selectedList && <p>Select a list please</p>}
+
+          {/* controls */}
+          <div
+            style={{
+              maxWidth: "400px",
+              display: "grid",
+              gridTemplateColumns: "auto 1fr auto",
+              gap: "12px",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              onclick={() => setDisplaySpeedController(prev=>!prev)}
+              theme={isDarkMode ? "dark" : "light"}
+              title={"More Options"}
+              style={{ width: "36px", height: "36px", padding: "0px",color:displaySpeedController?"#3d9eff":"inherit" }}
+            >
+              {/* <FontAwesomeIcon icon={faGear} size="xs" /> */}
+              <FontAwesomeIcon icon={faRunning} size="xs" />
+            </Button>
+            <ListsSelector
+              lists={LISTS}
+              value={selectedList}
+              onChange={setSelectedList}
+              backgroundColor={backgroundColor}
+              color={color}
+            />
+            <Button
+              onclick={() => setIsPlaying(prev=>!prev)}
+              theme={isDarkMode ? "dark" : "light"}
+              title={isPlaying ? "Stop loop" : "Play loop"}
+              style={{ width: "36px", height: "36px", padding: "0px" }}
+            >
+              {isPlaying ? (
+                <FontAwesomeIcon icon={faPause} size="xs" />
+              ) : (
+                <FontAwesomeIcon icon={faPlay} size="xs" />
+              )}
+            </Button>
+          </div>
+          {/* other controls */}
+          <div style={{width:"100%",maxWidth:"300px",minHeight:"40px"}}>
+          {displaySpeedController &&<SpeedInput speed={speed} setSpeed={setSpeed} />}
+          </div>
+        </section>
+      </main>
+
+      <footer
         style={{
-          position: "absolute",
-          bottom: "10px",
-          fontSize: "14px",
+          padding: "4px 8px",
+          display: "grid",
+          placeItems: "center",
+          maxWidth: "1000px",
+          width: "100%",
+          margin: "0px auto",
         }}
       >
         By elVengador & Lachicagladiadora - 2023
-      </p>
+      </footer>
     </div>
   );
 }
