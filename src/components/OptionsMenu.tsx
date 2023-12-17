@@ -116,11 +116,11 @@ const LabelInput = styled.input`
   background-color: inherit;
 `;
 
-const DescriptionInput = styled.input`
+const DescriptionInput = styled.textarea`
   padding: 4px 8px;
   width: 100%;
   font-size: 14px;
-  background-color: #525252;
+  background-color: #494949;
   color: white;
   border: none;
   border-radius: 4px;

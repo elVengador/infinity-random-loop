@@ -21,10 +21,11 @@ import { BASIC_CHORDS, ENGLISH_ADVANCED_VOCABULARY, ENGLISH_BASIC_VOCABULARY, EN
 const INITIAL_SETS: Set[] = [
   MUSICAL_NOTES,BASIC_CHORDS,ENGLISH_BASIC_VOCABULARY,ENGLISH_INTERMEDIATE_VOCABULARY,ENGLISH_ADVANCED_VOCABULARY
 ];
+const SETS_KEY = "sets"
 
 function App() {
   const [randomValue, setRandomValue] = useState<string>("");
-  const [options, setOptions] = useState<Set[]>(INITIAL_SETS);
+  const [sets, setSets] = useState<Set[]>([]);
   const [selectedOptions, setSelectedOption] = useState<Set | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -38,6 +39,19 @@ function App() {
     const newRandomValue = items[randomIndex];
     return newRandomValue
   }
+
+  const onSelectSet = (newValue:Set)=>{
+    setSelectedOption(newValue)
+    setIsPlaying(true)
+  }
+
+  useEffect(() => {
+    const setsFromLocalStorage = localStorage.getItem(SETS_KEY)
+    if(setsFromLocalStorage){
+      return setSets(JSON.parse(setsFromLocalStorage))
+    }
+    setSets(INITIAL_SETS)
+  }, []);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -55,7 +69,11 @@ function App() {
   const backgroundCard = isDarkMode ? "#FBFBFB" : "#6C6C6C";
 
   const onChangeOptionByIdx = (optionIdx: number,newOption: Set) => {
-    setOptions(prev=>prev.map((c,i)=>i===optionIdx?newOption:c))
+    setSets(prev=>{
+      const newSets = prev.map((c,i)=>i===optionIdx?newOption:c)
+      localStorage.setItem(SETS_KEY,JSON.stringify(newSets))
+      return newSets
+    })
   }
 
   return (
@@ -170,7 +188,7 @@ function App() {
             <Button
               onclick={() => setDisplaySpeedController((prev) => !prev)}
               theme={isDarkMode ? "dark" : "light"}
-              title={"More Options"}
+              title={"Change speed"}
               style={{
                 width: "36px",
                 height: "36px",
@@ -181,8 +199,8 @@ function App() {
               <FontAwesomeIcon icon={faRunning} size="xs" />
             </Button>
             <SetSelector
-              set={options}
-              selectSet={setSelectedOption}
+              set={sets}
+              selectSet={onSelectSet}
               selectedSet={selectedOptions}
               editSetByIdx={onChangeOptionByIdx}
             />
