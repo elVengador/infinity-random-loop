@@ -1,23 +1,29 @@
-import { faAngleDown, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faArrowLeft,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { SetMenu, Set } from "./OptionsMenu";
 import { Button } from "./Button";
+import { v4 as uuid4 } from "uuid";
+import { SETS_KEY } from "../constants";
 
 type ListsSelectorProps = {
-  set: Set[];
+  sets: Set[];
   selectedSet: Set | null;
   selectSet: (newValue: Set) => void;
-  editSetByIdx: (idx: number, newValue: Set) => void;
+  setSets: React.Dispatch<React.SetStateAction<Set[]>>;
 };
 
 export const SetSelector = ({
-  set,
+  sets,
   selectedSet,
   selectSet,
-  editSetByIdx,
+  setSets,
 }: ListsSelectorProps) => {
   const [displayOptions, setDisplayOptions] = useState(false);
 
@@ -27,6 +33,27 @@ export const SetSelector = ({
       setDisplayOptions(false);
     },
     [selectSet]
+  );
+
+  const onAddNewSet = useCallback(
+    () =>
+      setSets((prev) => {
+        const currentDate = new Date().toISOString()
+        const newSet: Set = { id: uuid4(), label: "", values: "",createdAt:currentDate,updatedAt:currentDate };
+        return [...prev, newSet];
+      }),
+    [setSets]
+  );
+
+  const onChangeOptionByIdx = useCallback(
+    (optionIdx: number, newOption: Set) => {
+      setSets((prev) => {
+        const newSets = prev.map((c, i) => (i === optionIdx ? newOption : c));
+        localStorage.setItem(SETS_KEY, JSON.stringify(newSets));
+        return newSets;
+      });
+    },
+    [setSets]
   );
 
   const OptionsModal = useMemo(() => {
@@ -40,25 +67,32 @@ export const SetSelector = ({
                 setDisplayOptions(false);
               }}
               theme="dark"
-              style={{ backgroundColor: "#cdcdcd" }}
+              style={{color:"white"}}
             >
               <>
                 Back <FontAwesomeIcon icon={faArrowLeft} />
               </>
             </Button>
+
+            <Info>You have <b>{sets.length}</b> sets</Info>
           </ModalHeader>
           <ModalMain>
             <SetMenu
               selectSet={onSelectSet}
-              set={set}
+              set={sets}
               selectedSet={selectedSet}
-              changeSetByIdx={editSetByIdx}
+              changeSetByIdx={onChangeOptionByIdx}
             />
           </ModalMain>
+          <ModalFooter>
+            <Button onclick={onAddNewSet} theme="dark" title="Add new Set" style={{ backgroundColor: "#cdcdcd" }}>
+              Add <FontAwesomeIcon icon={faPlus} />
+            </Button>
+          </ModalFooter>
         </Modal>
       </WrapperOverlay>
     );
-  }, [editSetByIdx, onSelectSet, selectedSet, set]);
+  }, [onAddNewSet, onChangeOptionByIdx, onSelectSet, selectedSet, sets]);
 
   return (
     <ListSelectorWrapper>
@@ -107,12 +141,27 @@ const Modal = styled.div`
   width: 100%;
   max-width: 600px;
   max-height: 600px;
+  display: grid;
+  grid-template-rows: 50px 1fr;
+  background-color: #3e3e3e;
 `;
 
 const ModalHeader = styled.div`
-  padding: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const ModalMain = styled.div`
   padding: 8px;
+  overflow-y: auto;
 `;
+
+const ModalFooter = styled.div`
+  padding: 16px;
+`;
+
+const Info = styled.p`
+  color:white
+`

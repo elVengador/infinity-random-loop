@@ -3,7 +3,7 @@ import { Button } from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleRight } from "@fortawesome/free-solid-svg-icons";
 
-export type Set = { id: string; values: string; label: string };
+export type Set = { id: string; values: string; label: string,createdAt:string,updatedAt:string };
 
 type SetMenuProps = {
   set: Set[];
@@ -22,7 +22,7 @@ export const SetMenu = ({
 }: SetMenuProps) => {
   return (
     <List style={{ ...style }}>
-      {set.map((cur, idx, src) => (
+      {set.sort((a,b)=>Number(new Date(b.createdAt))-Number(new Date(a.createdAt))).map((cur, idx, src) => (
         <ListItem
           key={cur.id}
           $idx={idx}
@@ -64,10 +64,13 @@ export const SetMenu = ({
 };
 
 const List = styled.ul`
+padding:0px 20px;
   width: 100%;
   list-style-type: none;
-  background-color: #313131;
   color: #ffffff;
+  display: grid;
+  gap: 30px;
+  background-color: inherit;
 `;
 
 const ListItem = styled.li<{
@@ -75,8 +78,10 @@ const ListItem = styled.li<{
   $length: number;
   $isSelected: boolean;
 }>`
-  padding: 10px;
-  border: solid 1px #ffffff;
+  /* padding: 10px; */
+  /* border: solid 1px #ffffff; */
+  /* background-color: #000000; */
+  
   ${(props) => {
     if (props.$idx === 0) {
       return css`
@@ -114,13 +119,14 @@ const LabelInput = styled.input`
   color: white;
   border: none;
   background-color: inherit;
+  background-color: #1d1d1d;
 `;
 
 const DescriptionInput = styled.textarea`
   padding: 4px 8px;
   width: 100%;
   font-size: 14px;
-  background-color: #494949;
+  background-color: #2d2d2d;
   color: white;
   border: none;
   border-radius: 4px;

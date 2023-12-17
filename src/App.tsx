@@ -16,12 +16,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getRandomInteger, narrateText } from "./utils";
 import { SpeedInput } from "./components/SpeedInput";
-import { BASIC_CHORDS, ENGLISH_ADVANCED_VOCABULARY, ENGLISH_BASIC_VOCABULARY, ENGLISH_INTERMEDIATE_VOCABULARY, MUSICAL_NOTES } from "./constants";
+import { BASIC_CHORDS, ENGLISH_ADVANCED_VOCABULARY, ENGLISH_BASIC_VOCABULARY, ENGLISH_INTERMEDIATE_VOCABULARY, MUSICAL_NOTES, SETS_KEY } from "./constants";
 
 const INITIAL_SETS: Set[] = [
   MUSICAL_NOTES,BASIC_CHORDS,ENGLISH_BASIC_VOCABULARY,ENGLISH_INTERMEDIATE_VOCABULARY,ENGLISH_ADVANCED_VOCABULARY
 ];
-const SETS_KEY = "sets"
 
 function App() {
   const [randomValue, setRandomValue] = useState<string>("");
@@ -67,14 +66,6 @@ function App() {
   const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
   const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";
   const backgroundCard = isDarkMode ? "#FBFBFB" : "#6C6C6C";
-
-  const onChangeOptionByIdx = (optionIdx: number,newOption: Set) => {
-    setSets(prev=>{
-      const newSets = prev.map((c,i)=>i===optionIdx?newOption:c)
-      localStorage.setItem(SETS_KEY,JSON.stringify(newSets))
-      return newSets
-    })
-  }
 
   return (
     <div
@@ -199,10 +190,10 @@ function App() {
               <FontAwesomeIcon icon={faRunning} size="xs" />
             </Button>
             <SetSelector
-              set={sets}
+              sets={sets}
               selectSet={onSelectSet}
               selectedSet={selectedOptions}
-              editSetByIdx={onChangeOptionByIdx}
+              setSets={setSets}
             />
             <Button
               onclick={() => setIsPlaying((prev) => !prev)}
