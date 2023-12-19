@@ -5,15 +5,7 @@ import { FlashcardsDeckSelector } from "./components/FlashcardsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FlashcardsDeck } from "./components/FlashcardsMenu";
-import {
-  faMoon,
-  faPause,
-  faPlay,
-  faRunning,
-  faSun,
-  faVolumeMute,
-  faVolumeUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay, faRunning } from "@fortawesome/free-solid-svg-icons";
 import { getRandomInteger, narrateText } from "./utils";
 import { SpeedInput } from "./components/SpeedInput";
 import {
@@ -27,6 +19,8 @@ import {
 import { useConfig } from "./context/config.context";
 import styled, { css } from "styled-components";
 import { UserTheme } from "./reducers/config.reducer";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
 
 const INITIAL_SETS: FlashcardsDeck[] = [
   MUSICAL_NOTES,
@@ -46,7 +40,7 @@ function App() {
   const [speed, setSpeed] = useState(1000);
   const [displaySpeedController, setDisplaySpeedController] = useState(false);
 
-  const { configState, configDispatch } = useConfig();
+  const { configState } = useConfig();
 
   const getRandomValue = (option: FlashcardsDeck) => {
     const items = option.values.split(",").map((c) => c.trim());
@@ -81,87 +75,11 @@ function App() {
 
   return (
     <Wrapper $theme={configState.theme}>
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          maxWidth: "1000px",
-          width: "100%",
-          margin: "0px auto",
-          padding: "4px 8px",
-        }}
-      >
-        <h1 style={{ fontSize: "20px", textAlign: "center", margin: "0px" }}>
-          Infinity Random Loop
-        </h1>
-        <section
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "20px",
-          }}
-        >
-          <Button
-            onclick={() =>
-              configDispatch({
-                type: "changeTheme",
-                payload: configState.theme === "dark" ? "light" : "dark",
-              })
-            }
-            // theme={configState.theme}
-            style={{ padding: "0px", width: "36px", height: "36px" }}
-            title={
-              configState.theme
-                ? "Change to light theme"
-                : "Change to dark theme"
-            }
-          >
-            {configState.theme === "dark" ? (
-              <FontAwesomeIcon icon={faMoon} size="xs" />
-            ) : (
-              <FontAwesomeIcon icon={faSun} size="xs" />
-            )}
-          </Button>
-          <Button
-            onclick={() => setCanNarrate((prev) => !prev)}
-            title={canNarrate ? "Disable narrator" : "Enable narrator"}
-            style={{ padding: "0px", width: "36px", height: "36px" }}
-          >
-            {canNarrate ? (
-              <FontAwesomeIcon icon={faVolumeUp} size="xs" />
-            ) : (
-              <FontAwesomeIcon icon={faVolumeMute} size="xs" />
-            )}
-          </Button>
-        </section>
-      </header>
+      <Header canNarrate={canNarrate} setCanNarrate={setCanNarrate} />
 
-      <main
-        style={{
-          padding: "4px 8px",
-          position: "relative",
-          maxWidth: "1000px",
-          width: "100%",
-          margin: "0px auto",
-          display: "grid",
-          placeItems: "center",
-        }}
-      >
+      <Main>
         {/* cards */}
-        <section
-          style={{
-            width: "100%",
-            height: "100%",
-            padding: "24px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "24px",
-          }}
-        >
+        <CenteredSection>
           {selectedFlashcardsDeck && randomValue && (
             <Flashcard
               value={randomValue}
@@ -172,16 +90,7 @@ function App() {
           {!selectedFlashcardsDeck && <p>Select a list please</p>}
 
           {/* controls */}
-          <div
-            style={{
-              width: "100%",
-              maxWidth: "400px",
-              display: "grid",
-              gridTemplateColumns: "auto 1fr auto",
-              gap: "12px",
-              alignItems: "center",
-            }}
-          >
+          <Controls>
             {selectedFlashcardsDeck && (
               <Button
                 onclick={() => setDisplaySpeedController((prev) => !prev)}
@@ -215,29 +124,17 @@ function App() {
                 )}
               </Button>
             )}
-          </div>
+          </Controls>
           {/* other controls */}
-          <div style={{ width: "100%", maxWidth: "300px", minHeight: "40px" }}>
+          <MoreControls>
             {displaySpeedController && (
               <SpeedInput speed={speed} setSpeed={setSpeed} />
             )}
-          </div>
-        </section>
-      </main>
+          </MoreControls>
+        </CenteredSection>
+      </Main>
 
-      <footer
-        style={{
-          padding: "4px 8px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          maxWidth: "1000px",
-          width: "100%",
-          margin: "0px auto",
-        }}
-      >
-        By elVengador & Lachicagladiadora - 2023
-      </footer>
+      <Footer />
     </Wrapper>
   );
 }
@@ -261,4 +158,39 @@ const Wrapper = styled.div<{ $theme: UserTheme }>`
       ? props.theme.colors.dark
       : props.theme.colors.light}
   `};
+`;
+
+const Main = styled.main`
+  padding: 4px 8px;
+  position: relative;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0px auto;
+  display: grid;
+`;
+
+const CenteredSection = styled.section`
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+`;
+
+const Controls = styled.div`
+  width: 100%;
+  max-width: 400px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+`;
+
+const MoreControls = styled.div`
+  width: 100%;
+  max-width: 300px;
+  min-height: 40px;
 `;
