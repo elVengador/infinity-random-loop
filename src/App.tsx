@@ -21,6 +21,7 @@ import styled, { css } from "styled-components";
 import { UserTheme } from "./reducers/config.reducer";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
+import { useSound } from "./hooks/useSound";
 
 const INITIAL_SETS: FlashcardsDeck[] = [
   MUSICAL_NOTES,
@@ -41,6 +42,7 @@ function App() {
   const [displaySpeedController, setDisplaySpeedController] = useState(false);
 
   const { configState } = useConfig();
+  const playStartSound = useSound("/start.mp3");
 
   const getRandomValue = (option: FlashcardsDeck) => {
     const items = option.values.split(",").map((c) => c.trim());
@@ -52,6 +54,7 @@ function App() {
   const onSelectSet = (newValue: FlashcardsDeck) => {
     setSelectedFlashcardsDeck(newValue);
     setIsPlaying(true);
+    if (canNarrate) playStartSound();
   };
 
   useEffect(() => {
