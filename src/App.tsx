@@ -1,10 +1,10 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Card } from "./components/Card";
-import { SetSelector } from "./components/ListsSelector";
+import { Flashcard } from "./components/Flashcard";
+import { FlashcardsDeckSelector } from "./components/FlashcardsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Set} from "./components/OptionsMenu"
+import { FlashcardsDeck } from "./components/FlashcardsMenu";
 import {
   faMoon,
   faPause,
@@ -16,69 +16,71 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getRandomInteger, narrateText } from "./utils";
 import { SpeedInput } from "./components/SpeedInput";
-import { BASIC_CHORDS, ENGLISH_ADVANCED_VOCABULARY, ENGLISH_BASIC_VOCABULARY, ENGLISH_INTERMEDIATE_VOCABULARY, MUSICAL_NOTES, SETS_KEY } from "./constants";
+import {
+  BASIC_CHORDS,
+  ENGLISH_ADVANCED_VOCABULARY,
+  ENGLISH_BASIC_VOCABULARY,
+  ENGLISH_INTERMEDIATE_VOCABULARY,
+  MUSICAL_NOTES,
+  SETS_KEY,
+} from "./constants";
+import { useConfig } from "./context/config.context";
+import styled, { css } from "styled-components";
+import { UserTheme } from "./reducers/config.reducer";
 
-const INITIAL_SETS: Set[] = [
-  MUSICAL_NOTES,BASIC_CHORDS,ENGLISH_BASIC_VOCABULARY,ENGLISH_INTERMEDIATE_VOCABULARY,ENGLISH_ADVANCED_VOCABULARY
+const INITIAL_SETS: FlashcardsDeck[] = [
+  MUSICAL_NOTES,
+  BASIC_CHORDS,
+  ENGLISH_BASIC_VOCABULARY,
+  ENGLISH_INTERMEDIATE_VOCABULARY,
+  ENGLISH_ADVANCED_VOCABULARY,
 ];
 
 function App() {
   const [randomValue, setRandomValue] = useState<string>("");
-  const [sets, setSets] = useState<Set[]>([]);
-  const [selectedOptions, setSelectedOption] = useState<Set | null>(null);
+  const [sets, setSets] = useState<FlashcardsDeck[]>([]);
+  const [selectedFlashcardsDeck, setSelectedFlashcardsDeck] =
+    useState<FlashcardsDeck | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [canNarrate, setCanNarrate] = useState(false);
   const [speed, setSpeed] = useState(1000);
   const [displaySpeedController, setDisplaySpeedController] = useState(false);
 
-  const getRandomValue = (option:Set)=>{
-    const items = option.values.split(',').map(c=>c.trim())
+  const { configState, configDispatch } = useConfig();
+
+  const getRandomValue = (option: FlashcardsDeck) => {
+    const items = option.values.split(",").map((c) => c.trim());
     const randomIndex = getRandomInteger(items.length - 1);
     const newRandomValue = items[randomIndex];
-    return newRandomValue
-  }
+    return newRandomValue;
+  };
 
-  const onSelectSet = (newValue:Set)=>{
-    setSelectedOption(newValue)
-    setIsPlaying(true)
-  }
+  const onSelectSet = (newValue: FlashcardsDeck) => {
+    setSelectedFlashcardsDeck(newValue);
+    setIsPlaying(true);
+  };
 
   useEffect(() => {
-    const setsFromLocalStorage = localStorage.getItem(SETS_KEY)
-    if(setsFromLocalStorage){
-      return setSets(JSON.parse(setsFromLocalStorage))
+    const setsFromLocalStorage = localStorage.getItem(SETS_KEY);
+    if (setsFromLocalStorage) {
+      return setSets(JSON.parse(setsFromLocalStorage));
     }
-    setSets(INITIAL_SETS)
+    setSets(INITIAL_SETS);
   }, []);
 
   useEffect(() => {
     if (!isPlaying) return;
-    if (!selectedOptions) return;
+    if (!selectedFlashcardsDeck) return;
     const intervalId = setInterval(() => {
-      const newRandomValue = getRandomValue(selectedOptions)
+      const newRandomValue = getRandomValue(selectedFlashcardsDeck);
       setRandomValue(newRandomValue);
       if (canNarrate) narrateText(newRandomValue.toLowerCase());
     }, speed);
     return () => clearInterval(intervalId);
-  }, [canNarrate, isPlaying, selectedOptions, speed]);
-
-  const backgroundColor = isDarkMode ? "rgb(206,206,206)" : "#1E1E1E";
-  const color = isDarkMode ? "#1E1E1E" : "rgb(206,206,206)";
-  const backgroundCard = isDarkMode ? "#FBFBFB" : "#6C6C6C";
+  }, [canNarrate, isPlaying, selectedFlashcardsDeck, speed]);
 
   return (
-    <div
-      style={{
-        height: "100%",
-        width: "100%",
-        display: "grid",
-        gridTemplateRows: "50px 1fr 30px",
-        gridTemplateColumns: "1fr",
-        background: backgroundColor,
-        color: color,
-      }}
-    >
+    <Wrapper $theme={configState.theme}>
       <header
         style={{
           display: "flex",
@@ -102,14 +104,21 @@ function App() {
           }}
         >
           <Button
-            onclick={() => setIsDarkMode((visual) => !visual)}
-            theme={isDarkMode ? "dark" : "light"}
+            onclick={() =>
+              configDispatch({
+                type: "changeTheme",
+                payload: configState.theme === "dark" ? "light" : "dark",
+              })
+            }
+            // theme={configState.theme}
             style={{ padding: "0px", width: "36px", height: "36px" }}
             title={
-              isDarkMode ? "Change to light theme" : "Change to dark theme"
+              configState.theme
+                ? "Change to light theme"
+                : "Change to dark theme"
             }
           >
-            {isDarkMode ? (
+            {configState.theme === "dark" ? (
               <FontAwesomeIcon icon={faMoon} size="xs" />
             ) : (
               <FontAwesomeIcon icon={faSun} size="xs" />
@@ -117,7 +126,6 @@ function App() {
           </Button>
           <Button
             onclick={() => setCanNarrate((prev) => !prev)}
-            theme={isDarkMode ? "dark" : "light"}
             title={canNarrate ? "Disable narrator" : "Enable narrator"}
             style={{ padding: "0px", width: "36px", height: "36px" }}
           >
@@ -154,21 +162,19 @@ function App() {
             gap: "24px",
           }}
         >
-          {selectedOptions && randomValue && (
-            <Card
+          {selectedFlashcardsDeck && randomValue && (
+            <Flashcard
               value={randomValue}
-              backgroundColor={backgroundCard}
-              color={color}
               style={{ maxWidth: "500px", maxHeight: "300px" }}
             />
           )}
 
-          {!selectedOptions && <p>Select a list please</p>}
+          {!selectedFlashcardsDeck && <p>Select a list please</p>}
 
           {/* controls */}
           <div
             style={{
-              width:"100%",
+              width: "100%",
               maxWidth: "400px",
               display: "grid",
               gridTemplateColumns: "auto 1fr auto",
@@ -176,37 +182,39 @@ function App() {
               alignItems: "center",
             }}
           >
-            <Button
-              onclick={() => setDisplaySpeedController((prev) => !prev)}
-              theme={isDarkMode ? "dark" : "light"}
-              title={"Change speed"}
-              style={{
-                width: "36px",
-                height: "36px",
-                padding: "0px",
-                color: displaySpeedController ? "#3d9eff" : "inherit",
-              }}
-            >
-              <FontAwesomeIcon icon={faRunning} size="xs" />
-            </Button>
-            <SetSelector
-              sets={sets}
-              selectSet={onSelectSet}
-              selectedSet={selectedOptions}
-              setSets={setSets}
+            {selectedFlashcardsDeck && (
+              <Button
+                onclick={() => setDisplaySpeedController((prev) => !prev)}
+                title={"Change speed"}
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  padding: "0px",
+                  color: displaySpeedController ? "#3d9eff" : "inherit",
+                }}
+              >
+                <FontAwesomeIcon icon={faRunning} size="xs" />
+              </Button>
+            )}
+            <FlashcardsDeckSelector
+              flashcards={sets}
+              selectFlashcard={onSelectSet}
+              selectedFlashcards={selectedFlashcardsDeck}
+              setFlashcards={setSets}
             />
-            <Button
-              onclick={() => setIsPlaying((prev) => !prev)}
-              theme={isDarkMode ? "dark" : "light"}
-              title={isPlaying ? "Stop loop" : "Play loop"}
-              style={{ width: "36px", height: "36px", padding: "0px" }}
-            >
-              {isPlaying ? (
-                <FontAwesomeIcon icon={faPause} size="xs" />
-              ) : (
-                <FontAwesomeIcon icon={faPlay} size="xs" />
-              )}
-            </Button>
+            {selectedFlashcardsDeck && (
+              <Button
+                onclick={() => setIsPlaying((prev) => !prev)}
+                title={isPlaying ? "Stop loop" : "Play loop"}
+                style={{ width: "36px", height: "36px", padding: "0px" }}
+              >
+                {isPlaying ? (
+                  <FontAwesomeIcon icon={faPause} size="xs" />
+                ) : (
+                  <FontAwesomeIcon icon={faPlay} size="xs" />
+                )}
+              </Button>
+            )}
           </div>
           {/* other controls */}
           <div style={{ width: "100%", maxWidth: "300px", minHeight: "40px" }}>
@@ -220,8 +228,9 @@ function App() {
       <footer
         style={{
           padding: "4px 8px",
-          display: "grid",
-          placeItems: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           maxWidth: "1000px",
           width: "100%",
           margin: "0px auto",
@@ -229,8 +238,27 @@ function App() {
       >
         By elVengador & Lachicagladiadora - 2023
       </footer>
-    </div>
+    </Wrapper>
   );
 }
 
 export default App;
+
+const Wrapper = styled.div<{ $theme: UserTheme }>`
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 50px 1fr 30px;
+  grid-template-columns: 1fr;
+  color: ${(props) => css`
+    ${props.$theme === "dark"
+      ? props.theme.colors.light
+      : props.theme.colors.dark}
+  `};
+
+  background-color: ${(props) => css`
+    ${props.$theme === "dark"
+      ? props.theme.colors.dark
+      : props.theme.colors.light}
+  `};
+`;
