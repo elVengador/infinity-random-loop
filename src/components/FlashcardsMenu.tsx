@@ -48,6 +48,7 @@ export const FlashcardsDeckMenu = ({
             <ListItemHeader>
               <LabelInput
                 value={cur.label}
+                placeholder="Flashcard name"
                 onChange={(e) =>
                   changeFlashcardByIdx(idx, {
                     ...flashcardsDeck[idx],
@@ -58,13 +59,14 @@ export const FlashcardsDeckMenu = ({
               />
               <Button
                 onclick={() => selectFlashcard(cur)}
-                title="Chose this set"
+                title="Chose this flashcard"
               >
                 <FontAwesomeIcon icon={faArrowAltCircleRight} />
               </Button>
             </ListItemHeader>
             <DescriptionInput
               value={cur.values}
+              placeholder="Items separated by commas, ex: one, two, three"
               onChange={(e) =>
                 changeFlashcardByIdx(idx, {
                   ...flashcardsDeck[idx],
@@ -132,6 +134,7 @@ const LabelInput = styled.input<{ $theme: UserTheme }>`
   width: 100%;
   font-size: 14px;
   border: none;
+  border-radius: 4px;
   color: ${(props) => css`
     ${props.$theme === "dark"
       ? props.theme.colors.light
@@ -139,8 +142,8 @@ const LabelInput = styled.input<{ $theme: UserTheme }>`
   `};
   background-color: ${(props) => css`
     ${props.$theme === "dark"
-      ? props.theme.colors.dark
-      : props.theme.colors.light}
+      ? props.theme.colors.gray[900]
+      : props.theme.colors.gray[100]}
   `};
 `;
 
