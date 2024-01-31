@@ -97,12 +97,16 @@ export const FlashcardsDeckSelector = ({
             />
           </ModalMain>
           <ModalFooter>
+            <HelpMessage>
+              The Flashcards are saved in your browser, so you are able to use
+              them at any moment.
+            </HelpMessage>
             <Button
               onclick={onAddNewFlashcard}
               title="Add new Set"
               variant="solid"
             >
-              Add New Set <FontAwesomeIcon icon={faPlus} />
+              New Flashcard <FontAwesomeIcon icon={faPlus} />
             </Button>
           </ModalFooter>
         </Modal>
@@ -203,4 +207,9 @@ const ModalMain = styled.div`
 
 const ModalFooter = styled.div`
   padding: 16px;
+`;
+
+const HelpMessage = styled.p`
+  padding: 8px 0px;
+  color: ${(props) => props.theme.colors.gray[500]};
 `;
