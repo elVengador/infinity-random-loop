@@ -1,4 +1,4 @@
-import { FlashcardsDeck } from "./components/FlashcardsMenu";
+import { FlashcardsDeck } from "./components/FlashcardsSelector";
 
 export const MUSICAL_NOTES: FlashcardsDeck = {
   id: "0001",
