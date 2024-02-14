@@ -12,7 +12,14 @@ export const Flashcard = ({ value, style }: FlashcardProps) => {
   const { configState } = useConfig();
   return (
     <FlashcardWrapper $theme={configState.theme} style={style}>
-      <p style={{ fontSize: "100px", textAlign: "center" }}>{value}</p>
+      <p
+        style={{
+          fontSize: value.length > 12 ? "70px" : "100px",
+          textAlign: "center",
+        }}
+      >
+        {value}
+      </p>
     </FlashcardWrapper>
   );
 };

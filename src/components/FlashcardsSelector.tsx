@@ -82,11 +82,11 @@ export const FlashcardsSelector = ({
     );
   }, [flashcards]);
 
-  const onChangeTitleByIdx = useCallback(
-    (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeTitleById = useCallback(
+    (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFlashcards((prev) => {
-        const newFlashcards = prev.map((c, i) =>
-          i === idx ? { ...c, label: e.target.value } : c
+        const newFlashcards = prev.map((c) =>
+          c.id === id ? { ...c, label: e.target.value } : c
         );
         localStorage.setItem(SETS_KEY, JSON.stringify(newFlashcards));
         return newFlashcards;
@@ -95,11 +95,11 @@ export const FlashcardsSelector = ({
     []
   );
 
-  const onChangeValuesByIdx = useCallback(
-    (idx: number) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChangeValuesById = useCallback(
+    (id: string) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setFlashcards((prev) => {
-        const newFlashcards = prev.map((c, i) =>
-          i === idx ? { ...c, values: e.target.value } : c
+        const newFlashcards = prev.map((c) =>
+          c.id === id ? { ...c, values: e.target.value } : c
         );
         localStorage.setItem(SETS_KEY, JSON.stringify(newFlashcards));
         return newFlashcards;
@@ -131,8 +131,8 @@ export const FlashcardsSelector = ({
       {displayOptions &&
         createPortal(
           <FlashCardsDeckModal
-            changeLabelByIdx={onChangeTitleByIdx}
-            changeValuesByIdx={onChangeValuesByIdx}
+            changeLabelById={onChangeTitleById}
+            changeValuesById={onChangeValuesById}
             flashcards={flashcardsSorted}
             selectedFlashcard={selectedFlashcard}
             selectFlashcard={onSelectFlashcard}
@@ -147,11 +147,11 @@ export const FlashcardsSelector = ({
 
 type FlashCardsDeckModalProps = {
   flashcards: FlashcardsDeck[];
-  changeLabelByIdx: (
-    idx: number
+  changeLabelById: (
+    id: string
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeValuesByIdx: (
-    idx: number
+  changeValuesById: (
+    id: string
   ) => (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   selectedFlashcard: FlashcardsDeck | null;
   selectFlashcard: (newValue: FlashcardsDeck) => void;
@@ -161,8 +161,8 @@ type FlashCardsDeckModalProps = {
 
 const FlashCardsDeckModal = ({
   flashcards,
-  changeLabelByIdx,
-  changeValuesByIdx,
+  changeLabelById,
+  changeValuesById,
   selectedFlashcard,
   selectFlashcard,
   addNewFlashcard,
@@ -187,8 +187,8 @@ const FlashCardsDeckModal = ({
               <FlashcardForm
                 key={cur.id}
                 data={cur}
-                changeLabel={changeLabelByIdx(idx)}
-                changeValues={changeValuesByIdx(idx)}
+                changeLabel={changeLabelById(cur.id)}
+                changeValues={changeValuesById(cur.id)}
                 isFirst={idx === 0}
                 isLast={src.length - 1 === idx}
                 isSelected={cur.id === selectedFlashcard?.id}
