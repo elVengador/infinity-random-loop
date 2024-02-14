@@ -4,39 +4,59 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import styled, { css } from "styled-components";
-import { FlashcardsDeckMenu, FlashcardsDeck } from "./FlashcardsMenu";
 import { Button } from "./Button";
 import { v4 as uuid4 } from "uuid";
-import { SETS_KEY } from "../constants";
+import {
+  BASIC_CHORDS,
+  ENGLISH_ADVANCED_VOCABULARY,
+  ENGLISH_BASIC_VOCABULARY,
+  ENGLISH_INTERMEDIATE_VOCABULARY,
+  MUSICAL_NOTES,
+  SETS_KEY,
+} from "../constants";
 import { UserTheme } from "../reducers/config.reducer";
 import { useConfig } from "../context/config.context";
+import { FlashcardForm } from "./FlashcardForm";
 
-type FlashcardsDeckSelectorProps = {
-  flashcards: FlashcardsDeck[];
-  selectedFlashcards: FlashcardsDeck | null;
-  selectFlashcard: (newValue: FlashcardsDeck) => void;
-  setFlashcards: React.Dispatch<React.SetStateAction<FlashcardsDeck[]>>;
+export type FlashcardsDeck = {
+  id: string;
+  values: string;
+  label: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export const FlashcardsDeckSelector = ({
-  flashcards,
-  selectedFlashcards,
-  selectFlashcard,
-  setFlashcards,
-}: FlashcardsDeckSelectorProps) => {
+const INITIAL_SETS: FlashcardsDeck[] = [
+  MUSICAL_NOTES,
+  BASIC_CHORDS,
+  ENGLISH_BASIC_VOCABULARY,
+  ENGLISH_INTERMEDIATE_VOCABULARY,
+  ENGLISH_ADVANCED_VOCABULARY,
+];
+
+type FlashcardsSelectorProps = {
+  selectedFlashcard: FlashcardsDeck | null;
+  setSelectedFlashcard: (newValue: FlashcardsDeck) => void;
+};
+
+export const FlashcardsSelector = ({
+  selectedFlashcard,
+  setSelectedFlashcard,
+}: FlashcardsSelectorProps) => {
   const [displayOptions, setDisplayOptions] = useState(false);
+  const [flashcards, setFlashcards] = useState<FlashcardsDeck[]>([]);
 
   const { configState } = useConfig();
 
   const onSelectFlashcard = useCallback(
     (newValue: FlashcardsDeck) => {
-      selectFlashcard(newValue);
+      setSelectedFlashcard(newValue);
       setDisplayOptions(false);
     },
-    [selectFlashcard]
+    [setSelectedFlashcard]
   );
 
   const onAddNewFlashcard = useCallback(
@@ -55,71 +75,46 @@ export const FlashcardsDeckSelector = ({
     [setFlashcards]
   );
 
-  const onChangeFlashcardByIdx = useCallback(
-    (flashcardIdx: number, newFlashcard: FlashcardsDeck) => {
+  const flashcardsSorted = useMemo(() => {
+    console.log({ flashcards });
+    return [...flashcards].sort(
+      (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
+    );
+  }, [flashcards]);
+
+  const onChangeTitleByIdx = useCallback(
+    (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFlashcards((prev) => {
         const newFlashcards = prev.map((c, i) =>
-          i === flashcardIdx ? newFlashcard : c
+          i === idx ? { ...c, label: e.target.value } : c
         );
         localStorage.setItem(SETS_KEY, JSON.stringify(newFlashcards));
         return newFlashcards;
       });
     },
-    [setFlashcards]
+    []
   );
 
-  const FlashCardsDeckModal = useCallback(() => {
-    return (
-      <WrapperOverlay $theme={configState.theme}>
-        <Modal $theme={configState.theme}>
-          <ModalHeader>
-            <Button
-              onclick={() => {
-                console.log("click clicked");
-                setDisplayOptions(false);
-              }}
-            >
-              <>
-                Back <FontAwesomeIcon icon={faArrowLeft} />
-              </>
-            </Button>
+  const onChangeValuesByIdx = useCallback(
+    (idx: number) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setFlashcards((prev) => {
+        const newFlashcards = prev.map((c, i) =>
+          i === idx ? { ...c, values: e.target.value } : c
+        );
+        localStorage.setItem(SETS_KEY, JSON.stringify(newFlashcards));
+        return newFlashcards;
+      });
+    },
+    []
+  );
 
-            <p>
-              You have <b>{flashcards.length}</b> flashcards deck
-            </p>
-          </ModalHeader>
-          <ModalMain>
-            <FlashcardsDeckMenu
-              selectFlashcard={onSelectFlashcard}
-              flashcardsDeck={flashcards}
-              selectedFlashcard={selectedFlashcards}
-              changeFlashcardByIdx={onChangeFlashcardByIdx}
-            />
-          </ModalMain>
-          <ModalFooter>
-            <HelpMessage>
-              The Flashcards are saved in your browser, so you are able to use
-              them at any moment.
-            </HelpMessage>
-            <Button
-              onclick={onAddNewFlashcard}
-              title="Add new Set"
-              variant="solid"
-            >
-              New Flashcard <FontAwesomeIcon icon={faPlus} />
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </WrapperOverlay>
-    );
-  }, [
-    configState.theme,
-    onAddNewFlashcard,
-    onChangeFlashcardByIdx,
-    onSelectFlashcard,
-    selectedFlashcards,
-    flashcards,
-  ]);
+  useEffect(() => {
+    const setsFromLocalStorage = localStorage.getItem(SETS_KEY);
+    if (setsFromLocalStorage) {
+      return setFlashcards(JSON.parse(setsFromLocalStorage));
+    }
+    setFlashcards(INITIAL_SETS);
+  }, []);
 
   return (
     <ListSelectorWrapper>
@@ -128,13 +123,91 @@ export const FlashcardsDeckSelector = ({
         role="button"
         $theme={configState.theme}
       >
-        {selectedFlashcards
-          ? selectedFlashcards.label
+        {selectedFlashcard
+          ? selectedFlashcard.label
           : "Select a options to start to practice with random elements"}
         <FontAwesomeIcon icon={faAngleDown} size="sm" />
       </SelectedItem>
-      {displayOptions && createPortal(<FlashCardsDeckModal />, document.body)}
+      {displayOptions &&
+        createPortal(
+          <FlashCardsDeckModal
+            changeLabelByIdx={onChangeTitleByIdx}
+            changeValuesByIdx={onChangeValuesByIdx}
+            flashcards={flashcardsSorted}
+            selectedFlashcard={selectedFlashcard}
+            selectFlashcard={onSelectFlashcard}
+            addNewFlashcard={onAddNewFlashcard}
+            closeModal={() => setDisplayOptions(false)}
+          />,
+          document.body
+        )}
     </ListSelectorWrapper>
+  );
+};
+
+type FlashCardsDeckModalProps = {
+  flashcards: FlashcardsDeck[];
+  changeLabelByIdx: (
+    idx: number
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeValuesByIdx: (
+    idx: number
+  ) => (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  selectedFlashcard: FlashcardsDeck | null;
+  selectFlashcard: (newValue: FlashcardsDeck) => void;
+  addNewFlashcard: () => void;
+  closeModal: () => void;
+};
+
+const FlashCardsDeckModal = ({
+  flashcards,
+  changeLabelByIdx,
+  changeValuesByIdx,
+  selectedFlashcard,
+  selectFlashcard,
+  addNewFlashcard,
+  closeModal,
+}: FlashCardsDeckModalProps) => {
+  return (
+    <WrapperOverlay $theme={"dark"}>
+      <Modal $theme={"dark"}>
+        <ModalHeader>
+          <Button onclick={closeModal}>
+            <>
+              Back <FontAwesomeIcon icon={faArrowLeft} />
+            </>
+          </Button>
+          <p>
+            You have <b>{flashcards.length}</b> flashcards deck
+          </p>
+        </ModalHeader>
+        <ModalMain>
+          <List>
+            {flashcards.map((cur, idx, src) => (
+              <FlashcardForm
+                key={cur.id}
+                data={cur}
+                changeLabel={changeLabelByIdx(idx)}
+                changeValues={changeValuesByIdx(idx)}
+                isFirst={idx === 0}
+                isLast={src.length - 1 === idx}
+                isSelected={cur.id === selectedFlashcard?.id}
+                setSelectedFlashcard={selectFlashcard}
+              />
+            ))}
+          </List>
+        </ModalMain>
+        <ModalFooter>
+          <HelpMessage>
+            The Flashcards are saved in your browser, so you are able to use
+            them at any moment.
+          </HelpMessage>
+          <Button onclick={addNewFlashcard} title="Add new Set" variant="solid">
+            New Flashcard <FontAwesomeIcon icon={faPlus} />
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </WrapperOverlay>
   );
 };
 
@@ -212,4 +285,14 @@ const ModalFooter = styled.div`
 const HelpMessage = styled.p`
   padding: 8px 0px;
   color: ${(props) => props.theme.colors.gray[500]};
+`;
+
+const List = styled.ul`
+  padding: 0px 20px;
+  width: 100%;
+  list-style-type: none;
+  display: grid;
+  gap: 30px;
+  background-color: inherit;
+  color: inherit;
 `;

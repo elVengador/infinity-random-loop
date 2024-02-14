@@ -1,21 +1,15 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Flashcard } from "./components/Flashcard";
-import { FlashcardsDeckSelector } from "./components/FlashcardsSelector";
+import {
+  FlashcardsDeck,
+  FlashcardsSelector,
+} from "./components/FlashcardsSelector";
 import { Button } from "./components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FlashcardsDeck } from "./components/FlashcardsMenu";
 import { faPause, faPlay, faRunning } from "@fortawesome/free-solid-svg-icons";
 import { getRandomInteger, narrateText } from "./utils";
 import { SpeedInput } from "./components/SpeedInput";
-import {
-  BASIC_CHORDS,
-  ENGLISH_ADVANCED_VOCABULARY,
-  ENGLISH_BASIC_VOCABULARY,
-  ENGLISH_INTERMEDIATE_VOCABULARY,
-  MUSICAL_NOTES,
-  SETS_KEY,
-} from "./constants";
 import { useConfig } from "./context/config.context";
 import styled, { css } from "styled-components";
 import { UserTheme } from "./reducers/config.reducer";
@@ -23,17 +17,8 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { useSound } from "./hooks/useSound";
 
-const INITIAL_SETS: FlashcardsDeck[] = [
-  MUSICAL_NOTES,
-  BASIC_CHORDS,
-  ENGLISH_BASIC_VOCABULARY,
-  ENGLISH_INTERMEDIATE_VOCABULARY,
-  ENGLISH_ADVANCED_VOCABULARY,
-];
-
 function App() {
   const [randomValue, setRandomValue] = useState<string>("");
-  const [sets, setSets] = useState<FlashcardsDeck[]>([]);
   const [selectedFlashcardsDeck, setSelectedFlashcardsDeck] =
     useState<FlashcardsDeck | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -51,19 +36,14 @@ function App() {
     return newRandomValue;
   };
 
-  const onSelectSet = (newValue: FlashcardsDeck) => {
-    setSelectedFlashcardsDeck(newValue);
-    setIsPlaying(true);
-    if (canNarrate) playStartSound();
-  };
-
-  useEffect(() => {
-    const setsFromLocalStorage = localStorage.getItem(SETS_KEY);
-    if (setsFromLocalStorage) {
-      return setSets(JSON.parse(setsFromLocalStorage));
-    }
-    setSets(INITIAL_SETS);
-  }, []);
+  const onSelectSet = useCallback(
+    (newValue: FlashcardsDeck) => {
+      setSelectedFlashcardsDeck(newValue);
+      setIsPlaying(true);
+      if (canNarrate) playStartSound();
+    },
+    [canNarrate, playStartSound]
+  );
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -108,11 +88,9 @@ function App() {
                 <FontAwesomeIcon icon={faRunning} size="xs" />
               </Button>
             )}
-            <FlashcardsDeckSelector
-              flashcards={sets}
-              selectFlashcard={onSelectSet}
-              selectedFlashcards={selectedFlashcardsDeck}
-              setFlashcards={setSets}
+            <FlashcardsSelector
+              setSelectedFlashcard={onSelectSet}
+              selectedFlashcard={selectedFlashcardsDeck}
             />
             {selectedFlashcardsDeck && (
               <Button
